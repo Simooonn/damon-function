@@ -273,3 +273,30 @@ function curlOpen($url, $config = [])
 
     return $result;
 }
+
+/**
+ * 数组形式的链接参数转换成字符串形式
+ *
+ * @param array $arr_params
+ * @param bool  $type true 带? false 不带?
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function param_arr_to_url_str($arr_params = [], $type = true)
+{
+    $s_query_params = '';
+    foreach ($arr_params as $key => $value) {
+        $param = $key . '=' . $value;
+        if (empty($s_query_params)) {
+            $s_query_params = $param;
+        }
+        else {
+            $s_query_params .= '&' . $param;
+        }
+        if ($type) {
+            $s_query_params = '?' . $s_query_params;
+        }
+    }
+    return $s_query_params;
+}

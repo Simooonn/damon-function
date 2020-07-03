@@ -6,130 +6,153 @@
  * Time: 18:00
  */
 
+//"1970-01-01 08:00:00";
 
 /**
- * 友好的时间显示 输入时间戳
+ * 秒数转成天 小时 分钟
  *
- * @param int    $n_time 待显示的时间
+ * @param int $seconds
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_seconds_to_daytime($seconds = 0 )
+{
+    if($seconds <= 0){
+        return '';
+    }
+    $day = floor($seconds / (3600*24));
+    $hour = floor(($seconds % (3600*24)) / 3600);
+    $minute = floor((($seconds % (3600*24)) % 3600) / 60);
+    $second = floor(((($seconds % (3600*24)) % 3600) % 60));
+
+    $s_day = $day == 0 ?'':$day.'天';
+    $s_hour = $hour == 0 ?'':$hour.'小时';
+    $s_minute = $minute == 0 ?'':$minute.'分';
+    $s_second = $second == 0 ?'':$second.'秒';
+    $s_result = $s_day.$s_hour.$s_minute.$s_second;
+
+    return $s_result;
+}
+
+/**
+ * 友好的时间显示
+ *
+ * @param int    $n_timestamp 输入时间戳
  * @param string $type   类型. normal | mohu | full | ymd | other
  *
  * @return string
  */
-function friendly_date($n_time, $type = '')
+function yoo_friendly_date($n_timestamp = 0, $type = '')
 {
-    if (!$n_time) {
+    if (!$n_timestamp) {
         return '';
     }
     //sTime=源时间，cTime=当前时间，dTime=时间差
 
     $c_time = time();
-    $d_time = $c_time - $n_time;
+    $d_time = $c_time - $n_timestamp;
     //如果时间在同一年内计算可以  如果跨年了 时间计算就有问题
-    //$d_day       =    intval(date("z",$c_time)) - intval(date("z",$n_time));
+    //$d_day       =    intval(date("z",$c_time)) - intval(date("z",$n_timestamp));
     $d_day  = intval($d_time / 3600 / 24);
-    $d_year = intval(date("Y", $c_time)) - intval(date("Y", $n_time));
+    $d_year = intval(date("Y", $c_time)) - intval(date("Y", $n_timestamp));
     //normal：n秒前，n分钟前，n小时前，日期
+
+    $s_result = '';
     if ($type == 'normal') {
         if ($d_time < 60) {
             if ($d_time < 10) {
-                return '刚刚';    //by yangjs
+                $s_result = '刚刚';    //by yangjs
             }
             else {
-                return intval(floor($d_time / 10) * 10) . "秒前";
+                $s_result = intval(floor($d_time / 10) * 10) . "秒前";
             }
         }
         elseif ($d_time < 3600) {
-            return intval($d_time / 60) . "分钟前";
+            $s_result = intval($d_time / 60) . "分钟前";
             //今天的数据.年份相同.日期相同.
         }
         elseif ($d_year == 0 && $d_day == 0) {
             //return intval($d_time/3600)."小时前";
-            return '今天' . date('H:i', $n_time);
+            $s_result = '今天' . date('H:i', $n_timestamp);
         }
         elseif ($d_year == 0) {
-            return date("m月d日 H:i", $n_time);
+            $s_result = date("m月d日 H:i", $n_timestamp);
         }
         else {
-            return date("Y-m-d H:i", $n_time);
+            $s_result = date("Y-m-d H:i", $n_timestamp);
         }
     }
     elseif ($type == 'mohu') {
 
         if ($d_time < 60) {
-            return $d_time . "秒前";
+            if ($d_time < 10) {
+                $s_result = '刚刚';    //by yangjs
+            }
+            else {
+                $s_result = intval(floor($d_time / 10) * 10) . "秒前";
+            }
         }
         elseif ($d_time < 3600) {
-            return intval($d_time / 60) . "分钟前";
+            $s_result = intval($d_time / 60) . "分钟前";
         }
         elseif ($d_time >= 3600 && $d_day == 0) {
-            return intval($d_time / 3600) . "小时前";
+            $s_result = intval($d_time / 3600) . "小时前";
         }
         elseif ($d_day > 0 && $d_day <= 7) {
-            return intval($d_day) . "天前";
+            $s_result = intval($d_day) . "天前";
         }
         elseif ($d_day > 7 && $d_day <= 30) {
-            return intval($d_day / 7) . '周前';
+            $s_result = intval($d_day / 7) . '周前';
         }
         elseif ($d_day > 30) {
-            return intval($d_day / 30) . '个月前';
+            $s_result = intval($d_day / 30) . '个月前';
         }
     }
     elseif ($type == 'full') {
-        return date("Y-m-d , H:i:s", $n_time);
+        $s_result = date("Y-m-d , H:i:s", $n_timestamp);
     }
     elseif ($type == 'ymd') {
-        return date("Y-m-d", $n_time);
+        $s_result = date("Y-m-d", $n_timestamp);
     }
     else {
         if ($d_time < 60) {
-            return $d_time . " 秒前";
+            $s_result = $d_time . " 秒前";
         }
         elseif ($d_time < 3600) {
-            return intval($d_time / 60) . " 分钟前";
+            $s_result = intval($d_time / 60) . " 分钟前";
         }
         elseif ($d_time >= 3600 && $d_day == 0) {
-            return intval($d_time / 3600) . " 小时前";
+            $s_result = intval($d_time / 3600) . " 小时前";
         }
         elseif ($d_year == 0) {
-            return date("Y-m-d H:i:s", $n_time);
+            $s_result = date("Y-m-d H:i:s", $n_timestamp);
         }
         else {
-            return date("Y-m-d H:i:s", $n_time);
+            $s_result = date("Y-m-d H:i:s", $n_timestamp);
         }
     }
+
+    return $s_result;
+
 }
 
-/**
- * 友好的时间显示 输入时间日期格式
- *
- * @param int    $s_time 待显示的时间
- * @param string $type   类型. normal | mohu | full | ymd | other
- *
- * @return string
- */
-function ymd_friendly_date($s_time, $type = 'mohu')
-{
-    if (!$s_time) {
-        return '';
-    }
-    $n_time = strtotime($s_time);
-    return friendly_date($n_time, $type);
-}
+
 
 /**
  * 时间戳 转换成 年月日时分秒
  *
- * @param string $n_time
+ * @param int $n_timestamp
  *
  * @return false|string
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function time_to_ymdhis($n_time = '')
+function yoo_ymdhis($n_timestamp = 0)
 {
-    if (empty($n_time)) {
-        $n_time = time();
+    if (empty($n_timestamp)) {
+        $n_timestamp = time();
     }
-    return date('Y-m-d H:i:s', $n_time);
+    return date('Y-m-d H:i:s', $n_timestamp);
 
 }
 
@@ -142,7 +165,7 @@ function time_to_ymdhis($n_time = '')
  * @return false|string
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function ymdhis_to_time_date($s_date = '')
+function yoo_timestring_to_ymdhis($s_date = '')
 {
     if (strlen($s_date) < 14) {
         $time_ymdhis = date('Y-m-d H:i:s', 0);
@@ -160,45 +183,55 @@ function ymdhis_to_time_date($s_date = '')
 
 }
 
+/*月份天数*/
+function yoo_month_days($n_timestamp = 0){
+    $n_timestamp = intval($n_timestamp);
+    return date('t',$n_timestamp);
+}
 
-function get_ctime($month)
-{
-    $month_start = strtotime($month);//指定年月份月初时间戳
-    $BeginDate   = date('Y-m-01', $month_start);
-    $EndDate     = date('Y-m-d 23:59:59', strtotime("$BeginDate +1 month -1 day"));
-    $months      = date('Y-m-d 0:0:0', $month_start) . ' _ ' . $EndDate;
-    return $months;
+/*月份第一天*/
+function yoo_month_start_day($n_timestamp = 0){
+    $n_timestamp = intval($n_timestamp);
+    return date('Y-m-01', $n_timestamp);
+}
+
+/*月份最后一天*/
+function yoo_month_end_day($n_timestamp = 0){
+    $n_timestamp = intval($n_timestamp);
+    $day = yoo_number_pad(yoo_month_days($n_timestamp),2);
+    return date('Y-m-', $n_timestamp).$day;
+}
+
+/*月份第一天 精确到秒*/
+function yoo_month_start($n_timestamp = 0){
+    return yoo_month_start_day( $n_timestamp).' 00:00:01';
+}
+
+/*月份最后一天 精确到秒*/
+function yoo_month_end($n_timestamp = 0){
+    return yoo_month_end_day($n_timestamp).' 23:59:59';
 }
 
 
 /**
  * 获取指定日期段内 指定格式的集合
  *
- * @param array $arr_date
- *
- * string  $arr_date['start'] 开始日期 格式化时间 Y-m-d H:i:s
- * string  $arr_date['end']   结束日期 格式化时间 Y-m-d H:i:s
- * string  $arr_date['date_type']   指定格式 Y 年 Ym 月 Ymd日
+ * @param int $timestamp_start
+ * @param int $timestamp_end
+ * @param int $format_type
  *
  * @return array
- * @throws \Exception
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function get_date_from_range($arr_date = [])
+function yoo_range_format_date($timestamp_start = 0,$timestamp_end = 0,$format_type = 'Ymd')
 {
-    $startdate = $arr_date['start'];
-    $enddate   = $arr_date['end'];
-    if (empty($startdate)) {
-        return [];
-    }
-    if (empty($enddate)) {
-        return [];
-    }
-    if (strtotime($enddate) < strtotime($startdate)) {
+    $timestamp_start = intval($timestamp_start);
+    $timestamp_end = intval($timestamp_end);
+    if ($timestamp_end < $timestamp_start) {
         return [];
     }
 
-    switch ($arr_date['date_type']) {
+    switch ($format_type) {
         //精确到日
         case 'Ymd':
             $date_type   = '1 day';//时间间距
@@ -223,18 +256,24 @@ function get_date_from_range($arr_date = [])
             $date_format = 'Y-m-d';//日期格式
     }
 
-    $startdate = date($date_format, strtotime($startdate));
-    $enddate   = date($date_format, strtotime($enddate . '+' . $date_type));
 
-    if ($arr_date['date_type'] == 'Y') {
-        for ($i = $startdate; $i < $enddate; $i++) {
+    $date_start = date($date_format, $timestamp_start);
+    $date_end   = date($date_format, strtotime(date('Y-m-d H:i:s',$timestamp_end) . '+' . $date_type));
+    if ($format_type == 'Y') {
+        for ($i = $date_start; $i < $date_end; $i++) {
             $arr_data[] = strval($i);
         }
 
     }
     else {
-        $start = new \DateTime($startdate);
-        $end   = new \DateTime($enddate);
+
+        try {
+            $start = new \DateTime($date_start);
+            $end   = new \DateTime($date_end);
+        }
+        catch (\Exception $exception) {
+            return [];
+        }
 
         // 时间间距 这里设置的是一个月
         $interval = \DateInterval::createFromDateString($date_type);
@@ -248,24 +287,26 @@ function get_date_from_range($arr_date = [])
     }
     $data = [
       'dates' => $arr_data,
-      'days'  => count($arr_data),
+      'numbers'  => count($arr_data),
     ];
     return $data;
 }
 
+//TODO
+
 /**
  * 格式化日期搜索条件
  *
- * @param $arr_date
+ * @param string $timestamp_start
+ * @param string $timestamp_end
+ * @param string $format_type
  *
  * @return mixed
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function format_date($arr_date)
+function yoo_format_date($timestamp_start = '',$timestamp_end = '',$format_type = 'Ymd')
 {
-    $startdate = $arr_date['start'];
-    $enddate   = $arr_date['end'];
-    switch ($arr_date['date_type']) {
+    switch ($format_type) {
         //精确到日
         case 'Ymd':
             $date_type   = '1 day';//时间间距
@@ -289,16 +330,11 @@ function format_date($arr_date)
             $date_type   = '1 day';//时间间距
             $date_format = '%Y-%m-%d';//日期格式
     }
-    $startdate        = date('Y-m-d H:i:s', strtotime($startdate));
-    $enddate          = date('Y-m-d H:i:s', strtotime($enddate) + 86400);
-    $arr_date_between = [$startdate, $enddate];
-    if (empty($startdate)) {
-        $arr_date_between = [];
-    }
-    if (empty($enddate)) {
-        $arr_date_between = [];
-    }
-    if (strtotime($enddate) < strtotime($startdate)) {
+    $timestamp_start        = date('Y-m-d H:i:s', strtotime($timestamp_start));
+    $timestamp_end          = date('Y-m-d H:i:s', strtotime($timestamp_end) + 86400);
+    $arr_date_between = [$timestamp_start, $timestamp_end];
+
+    if (strtotime($timestamp_end) < strtotime($timestamp_start)) {
         $arr_date_between = [];
     }
 

@@ -165,7 +165,7 @@ function yoo_tree_ico($n_level = 0,$end = false)
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_arr_remain($arr_data = [], $arr_remain_key = [])
+function yoo_array_remain($arr_data = [], $arr_remain_key = [])
 {
     $data = [];
     foreach ($arr_remain_key as $value) {
@@ -185,7 +185,7 @@ function yoo_arr_remain($arr_data = [], $arr_remain_key = [])
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_arr_except($arr_data = [], $arr_except_key = [])
+function yoo_array_except($arr_data = [], $arr_except_key = [])
 {
     foreach ($arr_except_key as $value) {
         unset($arr_data[$value]);
@@ -201,7 +201,7 @@ function yoo_arr_except($arr_data = [], $arr_except_key = [])
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_arr_del_null($arr_data = [])
+function yoo_array_del_null($arr_data = [])
 {
     foreach ($arr_data as $key=>$value)
     {
@@ -221,7 +221,7 @@ function yoo_arr_del_null($arr_data = [])
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_arr_trim($arr_data = [])
+function yoo_array_trim($arr_data = [])
 {
     $data = [];
     foreach ($arr_data as $key=>$value)
@@ -234,5 +234,294 @@ function yoo_arr_trim($arr_data = [])
         }
     }
     return $data;
+}
+
+/**
+ * 数组元素字符串命名风格转换 【下划线转驼峰】
+ *
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ *
+ * @param array  $array      数组
+ * @param bool   $ucfirst    首字母是否大写（驼峰规则）
+ * @param string $delimiters 分割字符      _ - ~ 等
+ *
+ * @return array
+ */
+function array_underline_to_hump($array,$ucfirst = true,$delimiters = '_')
+{
+    if(is_array($array)){
+        foreach($array as $k => $v){
+            $array[$k]
+              = string_underline_to_hump($v,$ucfirst,$delimiters);
+        }
+    }
+
+    return $array;
+}
+
+
+
+
+/**
+ * 列表数组转换成键值对的一维数组
+ *
+ * @param array  $arr_list
+ * @param string $s_value
+ * @param string $s_key
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function list_array_to_key_value($arr_list = [], $s_value = 'name', $s_key = 'id')
+{
+    $arr_data = [];
+    foreach ($arr_list as $value) {
+        $arr_data[$value[$s_key]] = $value[$s_value];
+    }
+    return $arr_data;
+}
+
+/**
+ * 将二维列表数组里的某个key对应的value拿出来，放到一维索引数组里
+ *
+ * @param array  $arr_list
+ * @param string $s_value_key
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function arr_value_to_ids($arr_list = [], $s_value_key = 'name')
+{
+    $arr_data = [];
+    foreach ($arr_list as $value) {
+        $arr_data[$value[$s_value_key]] = $value[$s_value_key];
+    }
+    $arr_data = array_values($arr_data);
+    return $arr_data;
+}
+
+/**
+ * 一维数组键变成值
+ *
+ * @param array  $arr_list
+ * @param string $s_value
+ * @param string $s_key
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function arr_value_to_key($arr_list = [])
+{
+    $arr_data = [];
+    foreach ($arr_list as $key => $value) {
+        $arr_data[] = $key;
+    }
+    return $arr_data;
+}
+
+
+/**
+ * id集合数组转为标识分隔的字符串
+ *
+ * @param array  $arrIds
+ * @param string $s_expend
+ * @param string $s_mark
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function ids_arr_to_string($arrIds = [], $s_expend = '', $s_mark = ',')
+{
+    $res = '';
+    if (is_array($arrIds) && count($arrIds) > 0) {
+        foreach ($arrIds as $value) {
+            $s_full_field = $s_expend . $value;
+
+            if ($res === '') {
+                $res = $s_full_field;
+            }
+            else {
+                $res .= $s_mark . $s_full_field;
+            }
+        }
+    }
+    return $res;
+}
+
+/**
+ * id标识分隔的字符串转为id集合数组
+ *
+ * @param string $s_Ids
+ * @param string $s_expend
+ * @param string $s_mark
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function ids_string_to_arr($s_Ids = '', $s_expend = '', $s_mark = ',')
+{
+    $res = [];
+    if (!empty($s_Ids)) {
+        $s_Ids = str_replace($s_expend, '', $s_Ids);
+        $res   = explode($s_mark, $s_Ids);
+    }
+    return $res;
+}
+
+/**
+ * 一维数组转为二维数组，同时给子数组添加特定索引
+ *
+ * @param array  $arr      一维数组
+ * @param string $s_expend 特定字符
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function arr_one_to_two($arr = [], $s_expend = 'id', $arr_option = [])
+{
+    $arr_data = [];
+    foreach ($arr as $key => $value) {
+        $arr_data[] = [$s_expend => $value] + $arr_option;
+    }
+    return $arr_data;
+}
+
+/**
+ * 一维数组每个value值加上特定的字符
+ *
+ * @param array  $arr        一维数组
+ * @param string $s_expend   特定字符
+ * @param string $s_location pre前 end后
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function arr_value_add_string($arr = [], $s_expend = '', $s_location = 'pre')
+{
+    if ($s_location === 'pre') {
+        foreach ($arr as $key => $value) {
+            $arr[$key] = $s_expend . $value;
+        }
+    }
+    else {
+        foreach ($arr as $key => $value) {
+            $arr[$key] = $value . $s_expend;
+        }
+    }
+    return $arr;
+}
+
+
+/**
+ * 一维数组每个value值公共的字符替换成其他的字符
+ *
+ * @param array  $arr       一维数组
+ * @param string $s_expend  公共字符
+ * @param string $s_replace 替换字符
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function arr_value_replace_string($arr = [], $s_expend = '', $s_replace = '')
+{
+    foreach ($arr as $key => $value) {
+        $arr[$key] = str_replace($s_expend, $s_replace, $value);
+    }
+    return $arr;
+}
+
+/**
+ * 数组重置 - 将键重置成索引的数组
+ *
+ * @param array $arr
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function arr_reset($arr = [])
+{
+    $arr_data = [];
+    foreach ($arr as $key => $value) {
+        $arr_data[] = $value;
+    }
+    return $arr_data;
+}
+
+/**
+ * 树形数组转换成一维伪树形数组
+ *
+ * @param $data
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function tree_to_one_tree($data)
+{
+    $arr_data = [];
+    if (!empty($data)) {
+        foreach ($data as $value) {
+            $arr_child = $value['_child'];
+            if (!empty($arr_child)) {
+                $value['_child'] = 1;
+                $arr_data[]      = $value;
+                $a               = tree_to_one_tree($arr_child);
+                $arr_data        = array_merge($arr_data, $a);
+            }
+            else {
+                $value['_child'] = 0;
+                $arr_data[]      = $value;
+            }
+        }
+    }
+    return $arr_data;
+}
+
+/**
+ * 过滤数组里的null字段，同时去掉字符串中的空格
+ *
+ * @param $arr_input
+ *
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function filter_input_data(&$arr_input)
+{
+    $arr_input = collect($arr_input)
+      ->filter(function ($value) {
+          if (!is_null($value)) {
+              return $value;
+          }
+
+      })
+      ->map(function ($value) {
+          if (is_string($value)) {
+              $value = str_trim($value);
+          }
+          return $value;
+
+      })
+      ->toArray();
+}
+
+/*处理数组变成笛卡尔积*/
+function combine_cartesian($data)
+{
+    $result = [];
+    foreach (array_shift($data) as $k => $item) {
+        $result[] = [$k => $item];
+    }
+
+
+    foreach ($data as $k => $v) {
+        $result2 = [];
+        foreach ($result as $k1 => $item1) {
+            foreach ($v as $k2 => $item2) {
+                $temp      = $item1;
+                $temp[$k2] = $item2;
+                $result2[] = $temp;
+            }
+        }
+        $result = $result2;
+    }
+    return $result;
 }
 
