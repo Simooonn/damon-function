@@ -30,31 +30,7 @@ function yoo_string_trim($str = '')
     return $str;
 }
 
-/**
- * 字符串命名风格转换 【下划线转驼峰】
- *
- * @author wumengmeng <wu_mengmeng@foxmail.com>
- *
- * @param string $string     字符串
- * @param bool   $ucfirst    首字母是否大写（驼峰规则）
- * @param string $delimiters 分割字符      _ - ~ 等
- *
- * @return string
- */
-function string_underline_to_hump($string,$ucfirst = true,$delimiters = '_')
-{
-    if(is_string($string)){
-        //字符串里单词首字母大写 然后将分割字符去除
-        $string
-          = str_replace($delimiters,'',ucwords($string,$delimiters));
 
-        //字符串首字母是否大写
-        if(!$ucfirst){
-            $string = lcfirst($string);
-        }
-    }
-    return $string;
-}
 
 /**
  * 隐藏手机号中间几位数字并用*代替 [延伸] 可对任何字段的指定位置字段进行隐藏

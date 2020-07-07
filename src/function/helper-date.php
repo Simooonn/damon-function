@@ -5,7 +5,7 @@
  * Date: 2020/6/30 0030
  * Time: 18:00
  */
-
+//TODO ok
 //"1970-01-01 08:00:00";
 
 /**
@@ -137,8 +137,6 @@ function yoo_friendly_date($n_timestamp = 0, $type = '')
 
 }
 
-
-
 /**
  * 时间戳 转换成 年月日时分秒
  *
@@ -212,13 +210,14 @@ function yoo_month_end($n_timestamp = 0){
     return yoo_month_end_day($n_timestamp).' 23:59:59';
 }
 
-
 /**
- * 获取指定日期段内 指定格式的集合
+ * 获取指定日期段内指定格式日期的集合
  *
- * @param int $timestamp_start
- * @param int $timestamp_end
- * @param int $format_type
+ * @param int    $timestamp_start   开始时间戳
+ * @param int    $timestamp_end     结束时间戳
+ * @param string $format_type       格式类型 Y-年为单位 Ym-月为单位 Ymd-天为单位
+ *
+ * 例：Y [2019,2020] Ym [2020-01,2020-02,2020-03,2020-04]
  *
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
@@ -285,26 +284,18 @@ function yoo_range_format_date($timestamp_start = 0,$timestamp_end = 0,$format_t
         }
 
     }
-    $data = [
-      'dates' => $arr_data,
-      'numbers'  => count($arr_data),
-    ];
-    return $data;
+    return $arr_data;
 }
 
-//TODO
-
 /**
- * 格式化日期搜索条件
+ * 日期格式-mysql语句
  *
- * @param string $timestamp_start
- * @param string $timestamp_end
- * @param string $format_type
+ * @param string $format_type Y-日期格式按年 Ym-日期格式按月 Ymd-日期格式按天
  *
  * @return mixed
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_format_date($timestamp_start = '',$timestamp_end = '',$format_type = 'Ymd')
+function yoo_mysql_date_format($format_type = 'Ymd')
 {
     switch ($format_type) {
         //精确到日
@@ -330,109 +321,71 @@ function yoo_format_date($timestamp_start = '',$timestamp_end = '',$format_type 
             $date_type   = '1 day';//时间间距
             $date_format = '%Y-%m-%d';//日期格式
     }
-    $timestamp_start        = date('Y-m-d H:i:s', strtotime($timestamp_start));
-    $timestamp_end          = date('Y-m-d H:i:s', strtotime($timestamp_end) + 86400);
-    $arr_date_between = [$timestamp_start, $timestamp_end];
 
-    if (strtotime($timestamp_end) < strtotime($timestamp_start)) {
-        $arr_date_between = [];
-    }
-
-    $arr_date['date_format']  = $date_format;
-    $arr_date['date_between'] = $arr_date_between;
-    return $arr_date;
+    return $date_format;
 }
 
 /**
- * 获取最近的日期 比如近7天 或者 近6个月
+ * 获取最近的日期 一周 一月 半年
  *
- * @param string $type
+ * @param string $type  日期类型
+ * @param bool   $reset 初始日期 true-周一起 月初1号起 半年前月初1号起 false-七天前起 一个月前起 半年前起
  *
- * @return mixed
+ * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function nearly_date($type = '')
+function yoo_nearly_date($type = '',$reset = false)
 {
     switch ($type) {
         case 'week':
-            $arr_date = [
-              'start'     => date('Y-m-d', strtotime('-6 day')),
-              'end'       => date('Y-m-d'),
-              'date_type' => 'Ymd'
-            ];
+            if($reset === true){
+                //周一
+                $s_start = date('Y-m-d',time()-(date('N') - 1) * 24 *60 *60);
+            }
+            else{
+                //7天前
+                $s_start = date('Y-m-d', strtotime('-6 day'));
+            }
+
             break;
         case 'month':
-            $arr_date = [
-              'start'     => date('Y-m') . '-01',
-              'end'       => date('Y-m-d'),
-              'date_type' => 'Ymd'
-            ];
+            if($reset === true){
+                //月初1号
+                $s_start = date('Y-m') . '-01';
+            }
+            else{
+                //一个月前
+                $s_start = date('Y-m-d', strtotime('-1 month'));
+            }
+
             break;
         case 'half_year':
-            $arr_date = [
-              'start'     => date('Y-m', strtotime('-5 month')) . '-01',
-              'end'       => date('Y-m-d'),
-              'date_type' => 'Ym'
-            ];
+
+            if($reset === true){
+                //6个月前月初1号
+                $s_start = date('Y-m', strtotime('-6 month')) . '-01';
+            }
+            else{
+                //6个月前
+                $s_start = date('Y-m-d', strtotime('-6 month'));
+            }
             break;
         default:
-            $arr_date = [
-              'start'     => date('Y-m-d', strtotime('-6 day')),
-              'end'       => date('Y-m-d'),
-              'date_type' => 'Ymd'
-            ];
+            if($reset === true){
+                //周一
+                $s_start = date('Y-m-d',time()-(date('N') - 1) * 24 *60 *60);
+            }
+            else{
+                //7天前
+                $s_start = date('Y-m-d', strtotime('-6 day'));
+            }
     }
-    //    $result = format_date($arr_date);
-    return $arr_date;
 
-}
-
-/**
- * 获取最近的日期 比如近7天 15天 一个月 或者 近6个月
- *
- * @param string $type
- *
- * @return mixed
- * @author wumengmeng <wu_mengmeng@foxmail.com>
- */
-function real_nearly_date($type = '')
-{
-    switch ($type) {
-        case 'week':
-            $arr_date = [
-              'start'     => date('Y-m-d', strtotime('-6 day')),
-              'end'       => date('Y-m-d'),
-              'date_type' => 'Ymd'
-            ];
-            break;
-        //        case 'half_month':
-        //            $arr_date = [
-        //              'start'=>date('Y-m-d',strtotime('-15 day')),
-        //              'end'=>date('Y-m-d'),
-        //              'date_type'=>'Ymd'
-        //            ];
-        //            break;
-        case 'month':
-            $arr_date = [
-              'start'     => date('Y-m-d', strtotime('-1 month')),
-              'end'       => date('Y-m-d'),
-              'date_type' => 'Ymd'
-            ];
-            break;
-        case 'half_year':
-            $arr_date = [
-              'start'     => date('Y-m', strtotime('-5 month')) . '-01',
-              'end'       => date('Y-m-d'),
-              'date_type' => 'Ym'
-            ];
-            break;
-        default:
-            $arr_date = [
-              'start'     => date('Y-m-d', strtotime('-6 day')),
-              'end'       => date('Y-m-d'),
-              'date_type' => 'Ymd'
-            ];
-    }
+    $s_end = date('Y-m-d');
+    $arr_date = [
+      'start'     => $s_start,
+      'end'       => $s_end,
+    ];
     //    $result = format_date($arr_date);
     return $arr_date;
 

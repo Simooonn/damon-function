@@ -22,6 +22,7 @@
         "files": [
             "src/function/helper.php",
             "src/function/helper-number.php",
+            "src/function/helper-array.php",
             "src/function/helper-date.php"
         ]
     }
