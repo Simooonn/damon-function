@@ -130,7 +130,7 @@ function yoo_hello_error($n_state = 1,$s_msg = '',$n_error_code = 1,$s_error_msg
       'error_code' => $n_error_code,
       'error_msg'  => $s_error_msg,
       'result'       => $arr_result,
-
+      'data'       => $arr_result,
     ];
 }
 
@@ -156,7 +156,7 @@ function yoo_hello_fail($s_msg = '',$s_error_msg = '',$arr_result = []){
       'error_code' => $n_error_code,
       'error_msg'  => $s_error_msg,
       'result'       => $arr_result,
-
+      'data'       => $arr_result,
     ];
 }
 
@@ -179,7 +179,7 @@ function yoo_hello_success($s_msg = '',$arr_result = []){
       'error_code' => $n_error_code,
       'error_msg'  => $s_error_msg,
       'result'       => $arr_result,
-
+      'data'       => $arr_result,
     ];
 }
 
@@ -628,7 +628,7 @@ function yoo_curl_download($url = '', $file_path = '')
 /************************************** 地图函数 **************************************/
 
 /*高德地图-地理编码-地址转经纬度*/
-function gaode_api_address_to_location($s_address = '',$city = ''){
+function yoo_api_gaode_geocode($s_address = '',$city = ''){
     $gaode_key = env('GAODE_API_KEY','7f4c1c8643860070335762bcc851ef69');
     $url = 'https://restapi.amap.com/v3/geocode/geo?address='.$s_address.'&output=JSON&key='.$gaode_key.'&city='.$city;
     $result = yoo_curl_get($url);
@@ -666,7 +666,7 @@ function gaode_api_address_to_location($s_address = '',$city = ''){
 
 
 /**
- * 求两个已知经纬度之间的距离
+ * 计算两个经纬度之间的距离
  *
  * @param int $longitude_start 起点经度
  * @param int $latitude_start  起点纬度
@@ -676,7 +676,7 @@ function gaode_api_address_to_location($s_address = '',$city = ''){
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function location_distance($longitude_start = 0, $latitude_start = 0, $longitude_end = 0, $latitude_end = 0)
+function yoo_location_distance($longitude_start = 0, $latitude_start = 0, $longitude_end = 0, $latitude_end = 0)
 {
 
     $R = 6378.137;//地球半径 单位千米
