@@ -1,12 +1,247 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: wumengmeng <wu_mengmeng@foxmail.com>
  * Date: 2020/6/30 0030
  * Time: 18:00
  */
-//TODO ok
+
+/*数据类型*/
+
+/************************************** 数字类型操作 **************************************/
+
+/**
+ * 字符串补位
+ *
+ * @param string $n_number  目标字符串
+ * @param int    $n_length  期望长度
+ * @param int    $s_pad     填充字符
+ * @param string $s_method  填充位置 left左侧 right右侧 both两侧
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_string_pad($n_number = '',$n_length = 0,$s_pad = '0',$s_method = 'left'){
+    switch ($s_method)
+    {
+        case 'left':
+            $s_result =     str_pad($n_number,$n_length,$s_pad,STR_PAD_LEFT);
+            break;
+        case 'right':
+            $s_result =     str_pad($n_number,$n_length,$s_pad,STR_PAD_RIGHT);
+            break;
+        case 'both':
+            $s_result =     str_pad($n_number,$n_length,$s_pad,STR_PAD_BOTH);
+            break;
+        default:
+            $s_result =     str_pad($n_number,$n_length,$s_pad,STR_PAD_LEFT);
+    }
+
+    return $s_result;
+}
+
+/**
+ * 数字补位
+ *
+ * @param string $n_number  数字
+ * @param int    $n_length  期望长度
+ * @param string $s_method  填充位置 left左侧 right右侧 both两侧
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_number_pad($n_number = '',$n_length = 0,$s_method = 'left'){
+    if(is_float($n_number)){
+        $n_length = $n_length + 1;
+    }
+    return yoo_string_pad($n_number,$n_length,0,$s_method);
+}
+
+/**
+ * 数字格式化
+ *
+ * @param int  $number      目标数字
+ * @param int  $decimals    保留小数位数
+ * @param bool $type        格式化类型 true-纯数字格式化（例7897677.00） false-千分位格式化（例7,897,677.00）
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_number_format($number = 0, $decimals = 0, $type = true){
+    if($type === true){
+        $result = number_format($number,$decimals,'.','');
+    }
+    else{
+        $result = number_format($number,$decimals);
+    }
+    return $result;
+}
+
+
+
+
+/************************************** 字符串处理 **************************************/
+
+/**
+ * 过滤字符串
+ *
+ * @param string $str
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_string_trim($str = '')
+{
+    if(is_string($str)){
+        if(isset($str) && (!is_null($str)) && (trim($str) !== '')) {
+            $str = trim($str);
+        }
+        else{
+            $str = '';
+        }
+    }
+    else{
+        $str = '';
+    }
+    return $str;
+}
+
+/**
+ * 隐藏字符串中的部分字符串
+ *
+ * @param string $s_string  目标字符串
+ * @param string $s_hide    隐藏字符 默认*
+ * @param int    $n_start   隐藏开始位置
+ * @param int    $n_length  隐藏长度
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_hide_string($s_string = '', $s_hide = '*', $n_start = 0, $n_length = 1)
+{
+    $n_end_start = $n_start + $n_length;
+    $s_hide = yoo_string_pad($s_hide,$n_length,$s_hide);
+    $res         = substr($s_string, 0, $n_start) . $s_hide . substr($s_string, $n_end_start);
+    return $res;
+}
+
+/**
+ * 从文章里随机抽取一句话
+ *
+ * @param string $s_article 文章内容 每句话之间用回车分开
+ *
+ * @return mixed
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_random_articl_says($s_article = '')
+{
+    $arr_article = explode("\n", $s_article);
+    $rand_string = $arr_article[array_rand($arr_article)];
+    return $rand_string;
+}
+
+
+/**
+ * 补充链接地址
+ *
+ * @param string $s_url     文件链接
+ * @param string $s_host
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_pad_url($s_url = '', $s_host = '')
+{
+    if (strpos($s_url, 'https://') !== false) {
+        $res = $s_url;
+    }
+    elseif (strpos($s_url, 'http://') !== false) {
+        $res = $s_url;
+    }
+    elseif (empty($s_url)) {
+        $res = '';
+    }
+    else {
+        $res = $s_host . $s_url;
+    }
+    return $res;
+}
+
+/**
+ * 从html中提取图片地址(使用正则)
+ *
+ * @param string $s_html
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_take_img($s_html = '')
+{
+    $images = [];
+    if (preg_match_all('/< *img[^>]*src *= *["\']?([^"\']*)/i', $s_html, $img)) {
+        foreach ($img[1] as $key => $val) {
+            if ($val) {
+                $images[] = $val;
+            }
+        }
+    }
+    return $images;
+}
+
+
+/**
+ * 随机生成唯一订单号
+ *
+ * @param string $s_prefix  前缀
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_random_order_sn($s_prefix = '')
+{
+
+    /*方法1 一次性生成100条数据 效果很差*/
+    //    $str = date('Ymd').substr(implode(NULL, array_map('ord', str_split(substr(uniqid(), 7, 13), 1))), 0, 8);
+
+    /*方法2 一次性生成100条数据 效果不错几乎没有重复 500也还好 1000几乎都会有几条重复数据*/
+    $str = date('ymdhis') . str_pad(mt_rand(1, 99999), 5, '0', STR_PAD_LEFT);
+
+    /*方法3 同方法2 效果差别不大*/
+    //    $str = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'][intval(date('Y')) - 2011] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
+    return $s_prefix . $str;
+}
+
+
+/**
+ * 生成唯一token
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_unique_token()
+{
+    $n_id           = yoo_string_pad(mt_rand(1, 9999999999), 11);
+    $s_unique_token = rtrim(base64_encode(uniqid() . '_' . $n_id), '==');
+    return $s_unique_token;
+}
+
+/**
+ * 字符串转换成大写 base64 md5
+ *
+ * @param string $s_uniqid
+ * @param string $s_prefix
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_upper_base64_md5($s_uniqid = '', $s_prefix = '')
+{
+    $result = $s_prefix . strtoupper(rtrim(base64_encode(md5($s_uniqid)), '=='));
+    return $result;
+}
+
+
+
 
 /************************************** 树形数组 **************************************/
 
@@ -161,11 +396,11 @@ function yoo_tree_ico($n_level = 0,$end = false)
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_tree_to_one_tree($data)
+function yoo_tree_list($arr_tree)
 {
     $arr_data = [];
-    if (!empty($data)) {
-        foreach ($data as $value) {
+    if (!empty($arr_tree)) {
+        foreach ($arr_tree as $value) {
             $arr_child = $value['_child'];
             if (!empty($arr_child)) {
                 $value['_child'] = 1;
@@ -431,19 +666,6 @@ function yoo_array_vreplace($arr = [], $s_expend = '', $s_replace = '')
     return $arr;
 }
 
-function combineArray($arr1, $arr2)
-{
-    $result = array();
-    foreach ($arr1 as $item1) {
-        foreach ($arr2 as $item2) {
-            $temp = $item1;
-            $temp[] = $item2;
-            $result[] = $temp;
-        }
-    }
-    return $result;
-}
-
 /**
  * 处理数组变成笛卡尔积
  *
@@ -502,4 +724,3 @@ function yoo_array_cartesian(...$arr_data)
     }
     return $result;
 }
-

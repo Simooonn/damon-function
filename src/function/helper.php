@@ -1,7 +1,5 @@
 <?php
 
-//TODO ok
-
 function yoo_dump($result){
     var_dump($result);
     die;
@@ -69,6 +67,8 @@ function yoo_client_ip($type = 0, $adv = false)
     $ip   = $long ? [$ip, $long] : ['0.0.0.0', 0];
     return $ip[$type];
 }
+
+
 
 /************************************** 返回提示 **************************************/
 
@@ -182,6 +182,9 @@ function yoo_hello_success($s_msg = '',$arr_result = []){
 
     ];
 }
+
+
+
 
 
 /************************************** 数据正则验证 **************************************/
@@ -323,6 +326,9 @@ function yoo_password_judge_score($password = '')
     return $score;
 }
 
+
+
+
 /************************************** 车牌号 **************************************/
 
 /**
@@ -455,4 +461,258 @@ function yoo_plate_no_city($s_plate_no = ''){
 }
 
 
+
+
+/************************************** curl **************************************/
+
+/**
+ * xml转数组
+ *
+ * @param $xml
+ *
+ * @return mixed
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_xml_to_array($xml)
+{
+    $reg = "/<(\w+)[^>]*>([\\x00-\\xFF]*)<\\/\\1>/";
+    if (preg_match_all($reg, $xml, $matches)) {
+        $count = count($matches[0]);
+        for ($i = 0; $i < $count; $i++) {
+            $subxml = $matches[2][$i];
+            $key    = $matches[1][$i];
+            if (preg_match($reg, $subxml)) {
+                $arr[$key] = yoo_xml_to_array($subxml);
+            }
+            else {
+                $arr[$key] = $subxml;
+            }
+        }
+    }
+    return $arr;
+}
+
+/**
+ * 数组形式的链接参数转换成字符串形式
+ *
+ * @param array $arr_params
+ * @param bool  $type true 带? false 不带?
+ *
+ * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_param_str($arr_params = [], $type = true)
+{
+    $s_query_params = '';
+    foreach ($arr_params as $key => $value) {
+        $param = $key . '=' . $value;
+        if (empty($s_query_params)) {
+            $s_query_params = $param;
+        }
+        else {
+            $s_query_params .= '&' . $param;
+        }
+        if ($type) {
+            $s_query_params = '?' . $s_query_params;
+        }
+    }
+    return $s_query_params;
+}
+
+/**
+ * curl get提交数据发送请求
+ *
+ * @param string $url
+ * @param array  $data
+ * @param array  $arr_option
+ *
+ * @return bool|string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_curl_get($url = '', $data = [], $arr_option = [])
+{
+
+    $url = $url.yoo_param_str($data);
+
+    $curl = curl_init();
+    //    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+    curl_setopt($curl, CURLOPT_URL, $url);//需要获取的URL地址，也可以在PHP的curl_init()函数中设置
+    if (isset($arr_option['header'])) {
+        $headers = $arr_option['header'];
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);//设置一个header中传输内容的数组。
+    }
+    curl_setopt($curl, CURLOPT_FAILONERROR, false);//显示HTTP状态码，默认行为是忽略编号小于等于400的HTTP信息
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);//设定是否显示头信息
+    //    curl_setopt($curl, CURLOPT_HEADER, true);//启用时会将头文件的信息作为数据流输出。
+
+    /*最后发现自己调用的api的接口地址是ssl协议的，然后加上下面两个就可以了 - 即https*/
+    if (1 == strpos("$" . $url, "https://")) {
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); // 信任任何证书
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    }
+
+    $result = curl_exec($curl);
+    curl_close($curl);
+    return $result;
+}
+
+/**
+ * curl post提交数据发送请求
+ *
+ * @param string $url
+ * @param string $data
+ * @param array  $arr_option
+ *
+ * @return bool|string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_curl_post($url = '', $data = [], $arr_option = [])
+{
+    if (empty($url) || empty($post_data)) {
+        return false;
+    }
+    $curl = curl_init();
+    //    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+    curl_setopt($curl, CURLOPT_POST, true); //设置POST请求
+
+    curl_setopt($curl, CURLOPT_URL, $url);
+    if (isset($arr_option['header'])) {
+        $headers = $arr_option['header'];
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);//设置一个header中传输内容的数组。
+    }
+    curl_setopt($curl, CURLOPT_FAILONERROR, false);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_HEADER, false);
+    curl_setopt($curl, CURLOPT_NOBODY, true);
+
+    /*最后发现自己调用的api的接口地址是ssl协议的，然后加上下面两个就可以了*/
+    if (1 == strpos("$" . $url, "https://")) {
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);// 信任任何证书
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+    }
+    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($curl, CURLOPT_TIMEOUT, (int)40);
+    $result = curl_exec($curl);
+    curl_close($curl);
+    return $result;
+}
+
+/**
+ * 远程文件下载
+ *
+ * @param string $url           远程文件地址
+ * @param string $file_path     本地保存路径
+ *
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_curl_download($url = '', $file_path = '')
+{
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+    $file = curl_exec($ch);
+    curl_close($ch);
+
+    $file_name = date('ymdhis').'_'.uniqid();
+    $tmp_file_name = $file_path.$file_name;
+
+    file_put_contents($tmp_file_name, $file);
+    //    $resource = file_put_contents($absolute_path, $file);
+    //    fwrite($resource, $file);
+    //    fclose($resource);
+}
+
+
+
+/************************************** 地图函数 **************************************/
+
+/*高德地图-地理编码-地址转经纬度*/
+function gaode_api_address_to_location($s_address = '',$city = ''){
+    $gaode_key = env('GAODE_API_KEY','7f4c1c8643860070335762bcc851ef69');
+    $url = 'https://restapi.amap.com/v3/geocode/geo?address='.$s_address.'&output=JSON&key='.$gaode_key.'&city='.$city;
+    $result = yoo_curl_get($url);
+    $result = json_decode($result,true);
+
+    $s_formatted_address = '北京天安门';
+    $s_longitude = '116.403694';
+    $s_latitude = '39.914714';
+
+    if($result['status'] == 1 && $result['count'] > 0){
+        $arr_location = explode(',',$result['geocodes'][0]['location']);
+
+        //查询成功
+        $data = [
+          'address'=>$s_address,
+          'formatted_address'=>$result['geocodes'][0]['formatted_address'],
+          'longitude'=>$arr_location[0],
+          'latitude'=>$arr_location[1],
+        ];
+        return  yoo_hello_success('查询成功',$data);
+    }
+    else{
+        //查询失败
+        $data = [
+          'address'=>$s_address,
+          'formatted_address'=>$s_formatted_address,
+          'longitude'=>$s_longitude,
+          'latitude'=>$s_latitude,
+        ];
+
+        return yoo_hello_fail('查询失败',$result['info'],$data);
+
+    }
+}
+
+
+/**
+ * 求两个已知经纬度之间的距离
+ *
+ * @param int $longitude_start 起点经度
+ * @param int $latitude_start  起点纬度
+ * @param int $longitude_end   终点经度
+ * @param int $latitude_end    终点纬度
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function location_distance($longitude_start = 0, $latitude_start = 0, $longitude_end = 0, $latitude_end = 0)
+{
+
+    $R = 6378.137;//地球半径 单位千米
+
+    //方法1
+    $rad_lat_start = deg2rad($latitude_start); //deg2rad()函数将角度转换为弧度
+    $rad_lat_end   = deg2rad($latitude_end);
+    $rad_lon_start = deg2rad($longitude_start);
+    $rad_lon_end   = deg2rad($longitude_end);
+    $x_lat         = $rad_lat_start - $rad_lat_end;
+    $x_lon         = $rad_lon_start - $rad_lon_end;
+    $result        = 2 * asin(sqrt(pow(sin($x_lat / 2), 2) + cos($rad_lat_start) * cos($rad_lat_end) * pow(sin($x_lon / 2), 2))) * $R;
+    $n_mi          = number_format($result * 1000, 0, '', '');
+
+    $n_km = number_format($result, 2);
+    if ($n_mi >= 1000) {
+        $s_default    = $n_km . '公里';
+        $s_en_default = $n_km . 'km';
+    }
+    else {
+        $s_default    = $n_mi . '米';
+        $s_en_default = $n_mi . 'm';
+    }
+    return ['m' => $n_mi, 'km' => $n_km, 'default' => $s_default, 'en_default' => $s_en_default];
+
+
+    /* //方法2
+     $lon_x = $longitude_start - $longitude_end;
+     $lat_x = $latitude_start - $latitude_end;
+     $rad_lon_x = pow(sin(pi()*($lon_x)/360),2);
+     $rad_lat_x = pow(sin(pi()*($lat_x)/360),2);
+     $rad_lan_s = cos(pi()*$latitude_start/180);
+     $rad_lan_e = cos($latitude_end * pi()/180);
+     $result = 2 * $R * asin(sqrt($rad_lon_x + $rad_lan_s * $rad_lan_e *$rad_lat_x));
+     $n_mi = number_format($result*1000,2);
+     $n_km = number_format($result,2);
+     return ['m'=>$n_mi,'km'=>$n_km];*/
+}
 
