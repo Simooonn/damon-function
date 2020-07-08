@@ -448,7 +448,7 @@ function yoo_array_remain($arr_data = [], $arr_remain_key = [])
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_array_except($arr_data = [], $arr_except_key = [])
+function yoo_array_remove($arr_data = [], $arr_except_key = [])
 {
     foreach ($arr_except_key as $value) {
         unset($arr_data[$value]);

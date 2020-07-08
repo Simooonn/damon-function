@@ -181,31 +181,31 @@ function yoo_timestring_to_ymdhis($s_date = '')
 
 }
 
-/*月份天数*/
+/*指定时间戳月份天数*/
 function yoo_month_days($n_timestamp = 0){
     $n_timestamp = intval($n_timestamp);
     return date('t',$n_timestamp);
 }
 
-/*月份第一天*/
+/*指定时间戳月份第一天*/
 function yoo_month_start_day($n_timestamp = 0){
     $n_timestamp = intval($n_timestamp);
     return date('Y-m-01', $n_timestamp);
 }
 
-/*月份最后一天*/
+/*指定时间戳月份最后一天*/
 function yoo_month_end_day($n_timestamp = 0){
     $n_timestamp = intval($n_timestamp);
     $day = yoo_number_pad(yoo_month_days($n_timestamp),2);
     return date('Y-m-', $n_timestamp).$day;
 }
 
-/*月份第一天 精确到秒*/
+/*指定时间戳月份第一天 精确到秒*/
 function yoo_month_start($n_timestamp = 0){
     return yoo_month_start_day( $n_timestamp).' 00:00:01';
 }
 
-/*月份最后一天 精确到秒*/
+/*指定时间戳月份最后一天 精确到秒*/
 function yoo_month_end($n_timestamp = 0){
     return yoo_month_end_day($n_timestamp).' 23:59:59';
 }

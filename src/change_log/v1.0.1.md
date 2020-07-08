@@ -52,7 +52,7 @@
 | yoo_tree_ico | 树形前缀ico|
 | yoo_tree_list | 树形数组转换成一维伪树形数组|
 | yoo_array_remain | 保留数组内指定key值的几个元素 |
-| yoo_array_except | 去除数组内指定key值的几个元素 |
+| yoo_array_remove | 去除数组内指定key值的几个元素 |
 | yoo_array_del_null | 删除数组中值为null的字段 |
 | yoo_array_trim| 过滤数组value值里的空格 |
 | yoo_string_underline_to_hump | 字符串命名风格转换 【下划线转驼峰】 |
@@ -73,11 +73,11 @@
 | yoo_friendly_date| 友好的时间显示 |
 | yoo_ymdhis| 时间戳 转换成 年月日时分秒 |
 | yoo_timestring_to_ymdhis| 字符时间日期转为日期格式 |
-| yoo_month_days| 月份天数 |
-| yoo_month_start_day| 月份第一天|
-| yoo_month_end_day| 月份最后一天 |
-| yoo_month_start| 月份第一天 精确到秒 |
-| yoo_month_end| 月份最后一天 精确到秒|
+| yoo_month_days| 指定时间戳月份天数 |
+| yoo_month_start_day| 指定时间戳月份第一天|
+| yoo_month_end_day| 指定时间戳月份最后一天 |
+| yoo_month_start| 指定时间戳月份第一天 精确到秒 |
+| yoo_month_end| 指定时间戳月份最后一天 精确到秒|
 | yoo_range_format_date| 获取指定日期段内指定格式日期的集合 |
 | yoo_mysql_date_format| 日期格式-mysql语句|
 | yoo_nearly_date| 获取最近的日期 一周 一月 半年 |
