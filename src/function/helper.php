@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 function yoo_dump($result){
     var_dump($result);
     die;
@@ -69,6 +72,148 @@ function yoo_client_ip($type = 0, $adv = false)
 }
 
 
+
+
+/************************************** 环境配置变量处理 **************************************/
+
+/**
+ * 读取配置文件
+ *
+ * @param $resoure
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_read_ini_file($resoure){
+
+    $str_ini = file_get_contents($resoure);
+    $arr_ini = explode("\n", $str_ini);
+    $arr_data = [];
+    $s_prifx = '';
+    foreach ($arr_ini as $key=>$value)
+    {
+        $value = trim($value);
+        if(!empty($value)){
+            if (strpos($value, '[') !== false) {
+
+                $s_prifx = trim(str_replace(['[',']','\'',"\n",'"'], '', $value));
+            }
+            else{
+                $arr_value = explode('=',$value);
+
+                $s_env_key = trim($arr_value[0]);
+                $s_env_value = trim($arr_value[1]);
+
+
+                if($s_prifx == ''){
+                    $arr_data[$s_env_key] = $s_env_value;
+                }
+                else{
+                    $arr_data[$s_prifx][$s_env_key] = $s_env_value;
+
+                }
+
+            }
+        }
+
+
+
+
+    }
+    return $arr_data;
+}
+
+/**
+ * 加载配置文件
+ *
+ * @param $resoure
+ *
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_load_ini_file($resoure){
+    if (is_file($resoure)) {
+        $env = parse_ini_file($resoure, true);
+        $arr_read_env = yoo_read_ini_file($resoure);
+        foreach ($env as $key => $val) {
+            $name =  $key;
+            if (is_array($val)) {
+                //2级配置
+                foreach ($val as $k => $v) {
+                    $item = $name . '.' . $k;
+                    switch ($v)
+                    {
+                        case '':
+                            $v = $arr_read_env[$key][$k];
+                            break;
+                        case 1:
+                            $v = $arr_read_env[$key][$k];
+                            break;
+                        default:
+                    }
+
+                    putenv("$item=$v");
+                }
+            }
+            else {
+                //1级配置
+                switch ($val)
+                {
+                    case '':
+                        $val = $arr_read_env[$key];
+                        break;
+                    case 1:
+                        $val = $arr_read_env[$key];
+                        break;
+                    default:
+                }
+                putenv("$name=$val");
+            }
+        }
+    }
+
+}
+
+if (! function_exists('env')) {
+    /**
+     * 获取环境配置变量
+     * Gets the value of an environment variable.
+     *
+     * @param  string  $key
+     * @param  mixed   $default
+     * @return mixed
+     */
+    function env($key, $default = null)
+    {
+        $value = getenv($key);
+        if($value !== false){
+            //删除字符串两边的 " 和 '
+            $result = trim( trim($value,"'"),'"');
+        }
+        else{
+            $result = $default;
+        }
+
+        switch (strtolower($result)) {
+            case 'true':
+                return true;
+            case '(true)':
+                return true;
+            case 'false':
+                return false;
+            case '(false)':
+                return false;
+            case 'empty':
+                return '';
+            case '(empty)':
+                return '';
+            case 'null':
+                return null;
+            case '(null)':
+                return null;
+        }
+        return $result;
+    }
+}
 
 /************************************** 返回提示 **************************************/
 

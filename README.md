@@ -6,6 +6,9 @@
 >helper-data-type.php主要存放数据类型相关处理函数
 >helper-date.php主要存放日期相关处理函数
 
+## 环境变量 env
+>若项目中没有加载.env文件功能，可使用yoo_load_ini_file()加载文件，然后使用env()获取
+
 ## helper.php
 
 | 函数名 | 作用  |
@@ -14,6 +17,9 @@
 | yoo_debug  | 打印数据 |
 | yoo_http_host  |  当前访问链接网址域名|
 | yoo_client_ip  | 客户端IP地址 |
+| yoo_read_ini_file  | 读取配置文件 |
+| yoo_load_ini_file  | 加载配置文件 |
+| env  | 获取环境配置变量 |
 | yoo_msg_error | 错误消息 |
 | yoo_echo_error | 错误提示 |
 | yoo_hello_error | 友好返回错误信息 |
