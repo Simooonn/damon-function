@@ -432,7 +432,7 @@ function yoo_array_remain($arr_data = [], $arr_remain_key = [])
 {
     $data = [];
     foreach ($arr_remain_key as $value) {
-        if (isset($arr[$value])) {
+        if (isset($arr_data[$value])) {
             $data[$value] = $arr_data[$value];
         }
     }
