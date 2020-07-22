@@ -439,6 +439,32 @@ function yoo_array_remain($arr_data = [], $arr_remain_key = [])
     return $data;
 }
 
+
+/**
+ * 保留数组内指定key值的几个元素 并过滤
+ *
+ * @param array $arr_data       目标数组
+ * @param array $arr_remain_key 保留元素的key
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_array_remain_trim($arr_data = [], $arr_remain_key = [])
+{
+    $data = [];
+    foreach ($arr_remain_key as $value) {
+        if (array_key_exists($value,$arr_data)) {
+            if(is_null($arr_data[$value])){
+                $data[$value] = '';
+            }
+            else{
+                $data[$value] = trim($arr_data[$value]);
+            }
+        }
+    }
+    return $data;
+}
+
 /**
  * 去除数组内指定key值的几个元素
  *
