@@ -432,7 +432,7 @@ function yoo_array_remain($arr_data = [], $arr_remain_key = [])
 {
     $data = [];
     foreach ($arr_remain_key as $value) {
-        if (isset($arr_data[$value])) {
+        if (array_key_exists($value,$arr_data)) {
             $data[$value] = $arr_data[$value];
         }
     }
@@ -489,11 +489,11 @@ function yoo_array_trim($arr_data = [])
     $data = [];
     foreach ($arr_data as $key=>$value)
     {
-        if(isset($arr_data[$key]) && (!is_null($value)) && (trim($value) !== ''))
-        {
-            if(is_string($value)){
-                $data[$key] = trim($value);
-            }
+        if(is_null($value)){
+            $data[$key] = '';
+        }
+        else{
+            $data[$key] = trim($value);
         }
     }
     return $data;
