@@ -271,6 +271,7 @@ function yoo_hello_error($n_state = 1,$s_msg = '',$n_error_code = 1,$s_error_msg
     }
     return [
       'state'      => $n_state,
+      'code'      => $n_state,
       'msg'        => $s_msg,
       'error_code' => $n_error_code,
       'error_msg'  => $s_error_msg,
@@ -297,6 +298,7 @@ function yoo_hello_fail($s_msg = '',$s_error_msg = '',$arr_result = []){
     }
     return [
       'state'      => $n_state,
+      'code'      => $n_state,
       'msg'        => $s_msg,
       'error_code' => $n_error_code,
       'error_msg'  => $s_error_msg,
@@ -320,6 +322,7 @@ function yoo_hello_success($s_msg = '',$arr_result = []){
     $s_error_msg = '';
     return [
       'state'      => $n_state,
+      'code'      => 0,
       'msg'        => $s_msg,
       'error_code' => $n_error_code,
       'error_msg'  => $s_error_msg,
