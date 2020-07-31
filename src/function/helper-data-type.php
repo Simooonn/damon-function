@@ -258,7 +258,7 @@ function yoo_upper_base64_md5($s_uniqid = '', $s_prefix = '')
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_make_tree($arr_list = [],$pk = 'id',$s_pid_key = 'pid',$child = '_child',$n_pid = 0,$n_level = 0)
+function yoo_make_tree($arr_list = [],$pk = 'id',$s_pid_key = 'pid',$_children = '_child',$n_pid = 0,$n_level = 0)
 {
     //    $tree     = [];
     //    $packData = [];
@@ -287,10 +287,10 @@ function yoo_make_tree($arr_list = [],$pk = 'id',$s_pid_key = 'pid',$child = '_c
             $val['level'] = $n_level;
 
             if(!empty($arr_list)){
-                $child = yoo_make_tree($arr_list,$pk,$s_pid_key,$child,$val[$pk],$n_level + 1);
+                $child = yoo_make_tree($arr_list,$pk,$s_pid_key,$_children,$val[$pk],$n_level + 1);
 
                 if(!empty($child)){
-                    $val['_child'] = $child;
+                    $val[$_children] = $child;
                 }
             }
             $tree[] = $val;
@@ -303,51 +303,22 @@ function yoo_make_tree($arr_list = [],$pk = 'id',$s_pid_key = 'pid',$child = '_c
 /**
  * 递归获取所有子级的数据id
  *
- * @param array  $arr_tree      树状数组
- * @param int    $n_pid         父级ID
- * @param string $pk            数据主键键名
- * @param string $s_pid_key     数据父级ID键名
+ * @param array  $arr_list  列表数据
+ * @param array  $data_ids  ID集合
+ * @param int    $n_pid     父级ID
+ * @param string $pk        数据主键键名
+ * @param string $s_pid_key 数据父级ID键名
  *
- * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_tree_child_ids($arr_tree = [],$n_pid = 0,$pk = 'id',$s_pid_key = 'pid')
-{
-    /*    if(is_array($arr_tree)){
-            $arr_tree = collect($arr_tree);
-        }
-        $tree = [];
-        if(is_array($n_pid)){
-            $ids = $arr_tree->whereIn('pid',$n_pid)->pluck('id')->all();
-            $tree = array_merge($tree,$n_pid);
-        }
-        else{
-            $ids  = $arr_tree->where('pid',$n_pid)->pluck('id')->all();
-            $tree[] = $n_pid;
-        }
-    //    $tree = array_merge($tree,$ids);
-        if(!empty($ids)){
-            $a = get_childrens_ids($arr_tree,$ids);
-            if(!empty($a)) {
-                $tree =  array_merge($tree,$a);
-            }
+function yoo_tree_child_ids($arr_list = [],&$data_ids = [],$n_pid = 0,$pk = 'id',$s_pid_key = 'pid') {
+    foreach($arr_list as $val) {
+        if($val[$s_pid_key]==$n_pid) {
+            $data_ids[] = $pid = $val[$pk];
+            yoo_tree_child_ids($arr_list,$data_ids,$pid,$pk,$s_pid_key);
         }
 
-        return $tree;*/
-
-    $tree[] = $n_pid;
-    foreach($arr_tree as $key => $val){
-        if($val[$s_pid_key] == $n_pid){
-            //获取当前$s_pid_key所有子类
-            unset($arr_tree[$key]);
-            $child = yoo_tree_child_ids($arr_tree,$val[$pk],$pk,$s_pid_key);
-            if(!empty($child)){
-                $tree = array_merge($tree,$child);
-            }
-        }
     }
-
-    return $tree;
 }
 
 /**
@@ -578,6 +549,24 @@ function yoo_array_underline_to_hump($array,$ucfirst = true,$delimiters = '_')
 }
 
 /************************************** 数组操作 **************************************/
+
+/**
+ * 列表数组转换成键值对的关联数组
+ *
+ * @param array  $arr_list
+ * @param string $s_key
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_array_kvv($arr_list = [], $s_key = 'id')
+{
+    $arr_data = [];
+    foreach ($arr_list as $value) {
+        $arr_data[$value[$s_key]] = $value;
+    }
+    return $arr_data;
+}
 
 /**
  * 列表数组转换成键值对的一维关联数组
