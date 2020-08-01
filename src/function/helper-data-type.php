@@ -496,6 +496,22 @@ function yoo_array_trim($arr_data = [])
     return $data;
 }
 
+/**
+ * 数组value转成小写-一维数组
+ *
+ * @param array $arr_data
+ *
+ * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ */
+function yoo_array_value_lower($arr_data = []){
+    foreach ($arr_data as &$value)
+    {
+        $value = strtolower($value);
+    }
+    return $arr_data;
+}
+
 
 /************************************** 下划线转驼峰 **************************************/
 
