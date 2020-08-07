@@ -708,7 +708,7 @@ function yoo_curl_get($url = '', $data = [], $arr_option = [])
  * curl post提交数据发送请求
  *
  * @param string $url
- * @param string $data
+ * @param array $data
  * @param array  $arr_option
  *
  * @return bool|string
@@ -716,7 +716,7 @@ function yoo_curl_get($url = '', $data = [], $arr_option = [])
  */
 function yoo_curl_post($url = '', $data = [], $arr_option = [])
 {
-    if (empty($url) || empty($post_data)) {
+    if (empty($url) || empty($data)) {
         return false;
     }
     $curl = curl_init();
