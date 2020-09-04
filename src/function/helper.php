@@ -1,9 +1,8 @@
 <?php
 
 
-
-
-function yoo_dump($result){
+function yoo_dump($result)
+{
     var_dump($result);
     die;
 }
@@ -11,7 +10,8 @@ function yoo_dump($result){
 /*
  * 打印
  * */
-function yoo_debug($v) {
+function yoo_debug($v)
+{
     header("Content-type: text/html; charset=utf-8");
 
     echo "<pre>";
@@ -72,8 +72,6 @@ function yoo_client_ip($type = 0, $adv = false)
 }
 
 
-
-
 /************************************** 环境配置变量处理 **************************************/
 
 /**
@@ -84,39 +82,37 @@ function yoo_client_ip($type = 0, $adv = false)
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_read_ini_file($resoure){
+function yoo_read_ini_file($resoure)
+{
 
-    $str_ini = file_get_contents($resoure);
-    $arr_ini = explode("\n", $str_ini);
+    $str_ini  = file_get_contents($resoure);
+    $arr_ini  = explode("\n", $str_ini);
     $arr_data = [];
-    $s_prifx = '';
-    foreach ($arr_ini as $key=>$value)
-    {
+    $s_prifx  = '';
+    foreach ($arr_ini as $key => $value) {
         $value = trim($value);
-        if(!empty($value)){
+        if (!empty($value)) {
             if (strpos($value, '[') !== false) {
 
-                $s_prifx = trim(str_replace(['[',']','\'',"\n",'"'], '', $value));
+                $s_prifx = trim(str_replace(['[', ']', '\'', "\n", '"'], '', $value));
             }
-            else{
-                $arr_value = explode('=',$value);
+            else {
+                $arr_value = explode('=', $value);
 
-                $s_env_key = trim($arr_value[0]);
+                $s_env_key   = trim($arr_value[0]);
                 $s_env_value = trim($arr_value[1]);
 
 
-                if($s_prifx == ''){
+                if ($s_prifx == '') {
                     $arr_data[$s_env_key] = $s_env_value;
                 }
-                else{
+                else {
                     $arr_data[$s_prifx][$s_env_key] = $s_env_value;
 
                 }
 
             }
         }
-
-
 
 
     }
@@ -130,18 +126,18 @@ function yoo_read_ini_file($resoure){
  *
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_load_ini_file($resoure){
+function yoo_load_ini_file($resoure)
+{
     if (is_file($resoure)) {
-        $env = parse_ini_file($resoure, true);
+        $env          = parse_ini_file($resoure, true);
         $arr_read_env = yoo_read_ini_file($resoure);
         foreach ($env as $key => $val) {
-            $name =  $key;
+            $name = $key;
             if (is_array($val)) {
                 //2级配置
                 foreach ($val as $k => $v) {
                     $item = $name . '.' . $k;
-                    switch ($v)
-                    {
+                    switch ($v) {
                         case '':
                             $v = $arr_read_env[$key][$k];
                             break;
@@ -156,8 +152,7 @@ function yoo_load_ini_file($resoure){
             }
             else {
                 //1级配置
-                switch ($val)
-                {
+                switch ($val) {
                     case '':
                         $val = $arr_read_env[$key];
                         break;
@@ -173,23 +168,24 @@ function yoo_load_ini_file($resoure){
 
 }
 
-if (! function_exists('env')) {
+if (!function_exists('env')) {
     /**
      * 获取环境配置变量
      * Gets the value of an environment variable.
      *
-     * @param  string  $key
-     * @param  mixed   $default
+     * @param string $key
+     * @param mixed  $default
+     *
      * @return mixed
      */
     function env($key, $default = null)
     {
         $value = getenv($key);
-        if($value !== false){
+        if ($value !== false) {
             //删除字符串两边的 " 和 '
-            $result = trim( trim($value,"'"),'"');
+            $result = trim(trim($value, "'"), '"');
         }
-        else{
+        else {
             $result = $default;
         }
 
@@ -233,16 +229,16 @@ function yoo_msg_error($msg = '')
 /*错误提示*/
 function yoo_echo_error($result = [])
 {
-    if(isset($result['state'])){
+    if (isset($result['state'])) {
         $n_state = intval($result['state']);
     }
-    else{
+    else {
         $n_state = 1;
     }
-    if(isset($result['msg'])){
+    if (isset($result['msg'])) {
         $s_msg = trim($result['msg']);
     }
-    else{
+    else {
         $s_msg = '错误提示';
     }
     if ($n_state !== 200) {
@@ -253,29 +249,30 @@ function yoo_echo_error($result = [])
 /**
  * 友好返回错误信息
  *
- * @param int    $n_state       错误状态
- * @param string $s_msg         错误提示
- * @param int    $n_error_code  错误状态码
- * @param string $s_error_msg   错误详细描述
- * @param array  $arr_result    返回结果
+ * @param int    $n_state      错误状态
+ * @param string $s_msg        错误提示
+ * @param int    $n_error_code 错误状态码
+ * @param string $s_error_msg  错误详细描述
+ * @param array  $arr_result   返回结果
  *
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_hello_error($n_state = 1,$s_msg = '',$n_error_code = 1,$s_error_msg = '',$arr_result = []){
-    if($n_error_code == 1){
+function yoo_hello_error($n_state = 1, $s_msg = '', $n_error_code = 1, $s_error_msg = '', $arr_result = [])
+{
+    if ($n_error_code == 1) {
         $n_error_code = $n_state;
     }
-    if($s_error_msg == ''){
+    if ($s_error_msg == '') {
         $s_error_msg = $s_msg;
     }
     return [
       'state'      => $n_state,
-      'code'      => $n_state,
+      'code'       => $n_state,
       'msg'        => $s_msg,
       'error_code' => $n_error_code,
       'error_msg'  => $s_error_msg,
-      'result'       => $arr_result,
+      'result'     => $arr_result,
       'data'       => $arr_result,
     ];
 }
@@ -283,26 +280,27 @@ function yoo_hello_error($n_state = 1,$s_msg = '',$n_error_code = 1,$s_error_msg
 /**
  * 友好返回失败信息
  *
- * @param string $s_msg         失败提示
- * @param string $s_error_msg   失败详细描述
- * @param array  $arr_result    返回结果
+ * @param string $s_msg       失败提示
+ * @param string $s_error_msg 失败详细描述
+ * @param array  $arr_result  返回结果
  *
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_hello_fail($s_msg = '',$s_error_msg = '',$arr_result = []){
-    $n_state = 1;
+function yoo_hello_fail($s_msg = '', $s_error_msg = '', $arr_result = [])
+{
+    $n_state      = 1;
     $n_error_code = 10001;
-    if($s_error_msg == ''){
+    if ($s_error_msg == '') {
         $s_error_msg = $s_msg;
     }
     return [
       'state'      => $n_state,
-      'code'      => $n_state,
+      'code'       => $n_state,
       'msg'        => $s_msg,
       'error_code' => $n_error_code,
       'error_msg'  => $s_error_msg,
-      'result'       => $arr_result,
+      'result'     => $arr_result,
       'data'       => $arr_result,
     ];
 }
@@ -310,29 +308,27 @@ function yoo_hello_fail($s_msg = '',$s_error_msg = '',$arr_result = []){
 /**
  * 友好返回成功信息
  *
- * @param string $s_msg         成功提醒
- * @param array  $arr_result    返回结果
+ * @param string $s_msg      成功提醒
+ * @param array  $arr_result 返回结果
  *
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_hello_success($s_msg = '',$arr_result = []){
-    $n_state = 200;
+function yoo_hello_success($s_msg = '', $arr_result = [])
+{
+    $n_state      = 200;
     $n_error_code = 200;
-    $s_error_msg = '';
+    $s_error_msg  = '';
     return [
       'state'      => $n_state,
-      'code'      => 0,
+      'code'       => 0,
       'msg'        => $s_msg,
       'error_code' => $n_error_code,
       'error_msg'  => $s_error_msg,
-      'result'       => $arr_result,
+      'result'     => $arr_result,
       'data'       => $arr_result,
     ];
 }
-
-
-
 
 
 /************************************** 数据正则验证 **************************************/
@@ -383,12 +379,12 @@ function yoo_preg_password($password, $type = 'simple')
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_preg_phone($phone = '',$rule = '')
+function yoo_preg_phone($phone = '', $rule = '')
 {
-    if($rule == ''){
+    if ($rule == '') {
         $rule = "/^1[3456789]\d{9}$/";
     }
-    $res  = preg_match_all($rule, $phone, $array);
+    $res = preg_match_all($rule, $phone, $array);
     if (!$res) {
         return yoo_hello_fail('手机号格式错误');
     }
@@ -475,8 +471,6 @@ function yoo_password_judge_score($password = '')
 }
 
 
-
-
 /************************************** 车牌号 **************************************/
 
 /**
@@ -485,7 +479,8 @@ function yoo_password_judge_score($password = '')
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_plate_no(){
+function yoo_plate_no()
+{
     $s_plate_whole = '京-北京市-A 北京市 城区,B 北京市 出租车,C 北京市 城区,E 北京市 城区,F 北京市 城区,G 北京市 远郊区
 津-天津市-A 天津市 天津市,B 天津市 天津市,C 天津市 天津市,E 天津市 出租车
 沪-上海市-A 上海市 市区,B 上海市 市区,C 上海市 远郊区,D 上海市 市区
@@ -518,26 +513,24 @@ function yoo_plate_no(){
 宁-宁夏回族-A 银川 银川,B 石嘴山 石嘴山,C 银南 银南,D 固原 固原
 琼-海南省-A 海口 海口,B 三亚 三亚,C 琼北 琼北';
 
-    $arr_plate_whole = explode("\r\n",$s_plate_whole);
-    $arr_data = [];
-    foreach ($arr_plate_whole as $value)
-    {
-        $province = explode("-",$value);
-        $city = explode(",",$province[2]);
+    $arr_plate_whole = explode("\r\n", $s_plate_whole);
+    $arr_data        = [];
+    foreach ($arr_plate_whole as $value) {
+        $province  = explode("-", $value);
+        $city      = explode(",", $province[2]);
         $arr_child = [];
-        foreach ($city as $vv)
-        {
-            $vv = explode(" ",$vv);
-            $arr_child[] =  [
-              'initial'=>$vv[0],
-              'city'=>$vv[1],
-              'info'=>$vv[2],
+        foreach ($city as $vv) {
+            $vv          = explode(" ", $vv);
+            $arr_child[] = [
+              'initial' => $vv[0],
+              'city'    => $vv[1],
+              'info'    => $vv[2],
             ];
         }
         $arr_data[] = [
-          'plate'=>$province[0],
-          'province'=>$province[1],
-          'child'=>$arr_child,
+          'plate'    => $province[0],
+          'province' => $province[1],
+          'child'    => $arr_child,
         ];
 
     }
@@ -553,62 +546,59 @@ function yoo_plate_no(){
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_plate_no_city($s_plate_no = ''){
+function yoo_plate_no_city($s_plate_no = '')
+{
 
-    $s_first = mb_substr($s_plate_no,0,1);
-    $s_second = strtoupper(mb_substr($s_plate_no,1,1));
-    $arr_data = yoo_plate_no();
-    $data = [];
-    $data['plate'] = '';
+    $s_first          = mb_substr($s_plate_no, 0, 1);
+    $s_second         = strtoupper(mb_substr($s_plate_no, 1, 1));
+    $arr_data         = yoo_plate_no();
+    $data             = [];
+    $data['plate']    = '';
     $data['province'] = '';
-    $data['initial'] = '';
-    $data['city'] = '';
-    $data['info'] = '';
-    foreach ($arr_data as $value)
-    {
-        if($s_first == $value['plate']){
-            $data['plate'] = $value['plate'];
+    $data['initial']  = '';
+    $data['city']     = '';
+    $data['info']     = '';
+    foreach ($arr_data as $value) {
+        if ($s_first == $value['plate']) {
+            $data['plate']    = $value['plate'];
             $data['province'] = $value['province'];
 
-            foreach ($value['child'] as $vv)
-            {
-                if($s_second == $vv['initial']){
+            foreach ($value['child'] as $vv) {
+                if ($s_second == $vv['initial']) {
                     $data['initial'] = $vv['initial'];
-                    $data['city'] = $vv['city'];
-                    $data['info'] = $vv['info'];
+                    $data['city']    = $vv['city'];
+                    $data['info']    = $vv['info'];
                 }
                 $arrIDs[] = $value;
             }
         }
     }
     return $data;
-/*
-    $s_first = mb_substr($s_plate_no,0,1);
-    $s_second = strtoupper(mb_substr($s_plate_no,1,1));
-    $arr_data = yoo_plate_no();
+    /*
+        $s_first = mb_substr($s_plate_no,0,1);
+        $s_second = strtoupper(mb_substr($s_plate_no,1,1));
+        $arr_data = yoo_plate_no();
 
-    $province = collect($arr_data)->where('plate',$s_first)->first();
-    $data = [];
-    $data['plate'] = '';
-    $data['province'] = '';
-    $data['initial'] = '';
-    $data['city'] = '';
-    $data['info'] = '';
-    if (!is_null($province)){
-        $data['plate'] = $province['plate'];
-        $data['province'] = $province['province'];
+        $province = collect($arr_data)->where('plate',$s_first)->first();
+        $data = [];
+        $data['plate'] = '';
+        $data['province'] = '';
+        $data['initial'] = '';
+        $data['city'] = '';
+        $data['info'] = '';
+        if (!is_null($province)){
+            $data['plate'] = $province['plate'];
+            $data['province'] = $province['province'];
 
-        $city = collect($province['child'])->where('initial',$s_second)->first();
-        if (!is_null($city)){
-            $data['initial'] = $city['initial'];
-            $data['city'] = $city['city'];
-            $data['info'] = $city['info'];
+            $city = collect($province['child'])->where('initial',$s_second)->first();
+            if (!is_null($city)){
+                $data['initial'] = $city['initial'];
+                $data['city'] = $city['city'];
+                $data['info'] = $city['info'];
+            }
         }
-    }
-    return $data;*/
+        return $data;*/
 }
-
-
 
 
 /************************************** curl **************************************/
@@ -680,7 +670,7 @@ function yoo_param_str($arr_params = [], $type = true)
 function yoo_curl_get($url = '', $data = [], $arr_option = [])
 {
 
-    $url = $url.yoo_param_str($data);
+    $url = $url . yoo_param_str($data);
 
     $curl = curl_init();
     //    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
@@ -708,7 +698,7 @@ function yoo_curl_get($url = '', $data = [], $arr_option = [])
  * curl post提交数据发送请求
  *
  * @param string $url
- * @param array $data
+ * @param array  $data
  * @param array  $arr_option
  *
  * @return bool|string
@@ -748,8 +738,8 @@ function yoo_curl_post($url = '', $data = [], $arr_option = [])
 /**
  * 远程文件下载
  *
- * @param string $url           远程文件地址
- * @param string $file_path     本地保存路径
+ * @param string $url       远程文件地址
+ * @param string $file_path 本地保存路径
  *
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
@@ -762,8 +752,8 @@ function yoo_curl_download($url = '', $file_path = '')
     $file = curl_exec($ch);
     curl_close($ch);
 
-    $file_name = date('ymdhis').'_'.uniqid();
-    $tmp_file_name = $file_path.$file_name;
+    $file_name     = date('ymdhis') . '_' . uniqid();
+    $tmp_file_name = $file_path . $file_name;
 
     file_put_contents($tmp_file_name, $file);
     //    $resource = file_put_contents($absolute_path, $file);
@@ -772,42 +762,42 @@ function yoo_curl_download($url = '', $file_path = '')
 }
 
 
-
 /************************************** 地图函数 **************************************/
 
 /*高德地图-地理编码-地址转经纬度*/
-function yoo_api_gaode_geocode($s_address = '',$city = ''){
-    $gaode_key = env('GAODE_API_KEY','7f4c1c8643860070335762bcc851ef69');
-    $url = 'https://restapi.amap.com/v3/geocode/geo?address='.$s_address.'&output=JSON&key='.$gaode_key.'&city='.$city;
-    $result = yoo_curl_get($url);
-    $result = json_decode($result,true);
+function yoo_api_gaode_geocode($s_address = '', $city = '')
+{
+    $gaode_key = env('GAODE_API_KEY', '7f4c1c8643860070335762bcc851ef69');
+    $url       = 'https://restapi.amap.com/v3/geocode/geo?address=' . $s_address . '&output=JSON&key=' . $gaode_key . '&city=' . $city;
+    $result    = yoo_curl_get($url);
+    $result    = json_decode($result, true);
 
     $s_formatted_address = '北京天安门';
-    $s_longitude = '116.403694';
-    $s_latitude = '39.914714';
+    $s_longitude         = '116.403694';
+    $s_latitude          = '39.914714';
 
-    if($result['status'] == 1 && $result['count'] > 0){
-        $arr_location = explode(',',$result['geocodes'][0]['location']);
+    if ($result['status'] == 1 && $result['count'] > 0) {
+        $arr_location = explode(',', $result['geocodes'][0]['location']);
 
         //查询成功
         $data = [
-          'address'=>$s_address,
-          'formatted_address'=>$result['geocodes'][0]['formatted_address'],
-          'longitude'=>$arr_location[0],
-          'latitude'=>$arr_location[1],
+          'address'           => $s_address,
+          'formatted_address' => $result['geocodes'][0]['formatted_address'],
+          'longitude'         => $arr_location[0],
+          'latitude'          => $arr_location[1],
         ];
-        return  yoo_hello_success('查询成功',$data);
+        return yoo_hello_success('查询成功', $data);
     }
-    else{
+    else {
         //查询失败
         $data = [
-          'address'=>$s_address,
-          'formatted_address'=>$s_formatted_address,
-          'longitude'=>$s_longitude,
-          'latitude'=>$s_latitude,
+          'address'           => $s_address,
+          'formatted_address' => $s_formatted_address,
+          'longitude'         => $s_longitude,
+          'latitude'          => $s_latitude,
         ];
 
-        return yoo_hello_fail('查询失败',$result['info'],$data);
+        return yoo_hello_fail('查询失败', $result['info'], $data);
 
     }
 }

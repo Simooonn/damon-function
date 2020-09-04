@@ -16,21 +16,21 @@
  * @return string
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_seconds_to_daytime($seconds = 0 )
+function yoo_seconds_to_daytime($seconds = 0)
 {
-    if($seconds <= 0){
+    if ($seconds <= 0) {
         return '';
     }
-    $day = floor($seconds / (3600*24));
-    $hour = floor(($seconds % (3600*24)) / 3600);
-    $minute = floor((($seconds % (3600*24)) % 3600) / 60);
-    $second = floor(((($seconds % (3600*24)) % 3600) % 60));
+    $day    = floor($seconds / (3600 * 24));
+    $hour   = floor(($seconds % (3600 * 24)) / 3600);
+    $minute = floor((($seconds % (3600 * 24)) % 3600) / 60);
+    $second = floor(((($seconds % (3600 * 24)) % 3600) % 60));
 
-    $s_day = $day == 0 ?'':$day.'天';
-    $s_hour = $hour == 0 ?'':$hour.'小时';
-    $s_minute = $minute == 0 ?'':$minute.'分';
-    $s_second = $second == 0 ?'':$second.'秒';
-    $s_result = $s_day.$s_hour.$s_minute.$s_second;
+    $s_day    = $day == 0 ? '' : $day . '天';
+    $s_hour   = $hour == 0 ? '' : $hour . '小时';
+    $s_minute = $minute == 0 ? '' : $minute . '分';
+    $s_second = $second == 0 ? '' : $second . '秒';
+    $s_result = $s_day . $s_hour . $s_minute . $s_second;
 
     return $s_result;
 }
@@ -39,7 +39,7 @@ function yoo_seconds_to_daytime($seconds = 0 )
  * 友好的时间显示
  *
  * @param int    $n_timestamp 输入时间戳
- * @param string $type   类型. normal | mohu | full | ymd | other
+ * @param string $type        类型. normal | mohu | full | ymd | other
  *
  * @return string
  */
@@ -182,50 +182,55 @@ function yoo_timestring_to_ymdhis($s_date = '')
 }
 
 /*指定时间戳月份天数*/
-function yoo_month_days($n_timestamp = 0){
+function yoo_month_days($n_timestamp = 0)
+{
     $n_timestamp = intval($n_timestamp);
-    return date('t',$n_timestamp);
+    return date('t', $n_timestamp);
 }
 
 /*指定时间戳月份第一天*/
-function yoo_month_start_day($n_timestamp = 0){
+function yoo_month_start_day($n_timestamp = 0)
+{
     $n_timestamp = intval($n_timestamp);
     return date('Y-m-01', $n_timestamp);
 }
 
 /*指定时间戳月份最后一天*/
-function yoo_month_end_day($n_timestamp = 0){
+function yoo_month_end_day($n_timestamp = 0)
+{
     $n_timestamp = intval($n_timestamp);
-    $day = yoo_number_pad(yoo_month_days($n_timestamp),2);
-    return date('Y-m-', $n_timestamp).$day;
+    $day         = yoo_number_pad(yoo_month_days($n_timestamp), 2);
+    return date('Y-m-', $n_timestamp) . $day;
 }
 
 /*指定时间戳月份第一天 精确到秒*/
-function yoo_month_start($n_timestamp = 0){
-    return yoo_month_start_day( $n_timestamp).' 00:00:01';
+function yoo_month_start($n_timestamp = 0)
+{
+    return yoo_month_start_day($n_timestamp) . ' 00:00:01';
 }
 
 /*指定时间戳月份最后一天 精确到秒*/
-function yoo_month_end($n_timestamp = 0){
-    return yoo_month_end_day($n_timestamp).' 23:59:59';
+function yoo_month_end($n_timestamp = 0)
+{
+    return yoo_month_end_day($n_timestamp) . ' 23:59:59';
 }
 
 /**
  * 获取指定日期段内指定格式日期的集合
  *
- * @param int    $timestamp_start   开始时间戳
- * @param int    $timestamp_end     结束时间戳
- * @param string $format_type       格式类型 Y-年为单位 Ym-月为单位 Ymd-天为单位
+ * @param int    $timestamp_start 开始时间戳
+ * @param int    $timestamp_end   结束时间戳
+ * @param string $format_type     格式类型 Y-年为单位 Ym-月为单位 Ymd-天为单位
  *
  * 例：Y [2019,2020] Ym [2020-01,2020-02,2020-03,2020-04]
  *
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_range_format_date($timestamp_start = 0,$timestamp_end = 0,$format_type = 'Ymd')
+function yoo_range_format_date($timestamp_start = 0, $timestamp_end = 0, $format_type = 'Ymd')
 {
     $timestamp_start = intval($timestamp_start);
-    $timestamp_end = intval($timestamp_end);
+    $timestamp_end   = intval($timestamp_end);
     if ($timestamp_end < $timestamp_start) {
         return [];
     }
@@ -257,7 +262,7 @@ function yoo_range_format_date($timestamp_start = 0,$timestamp_end = 0,$format_t
 
 
     $date_start = date($date_format, $timestamp_start);
-    $date_end   = date($date_format, strtotime(date('Y-m-d H:i:s',$timestamp_end) . '+' . $date_type));
+    $date_end   = date($date_format, strtotime(date('Y-m-d H:i:s', $timestamp_end) . '+' . $date_type));
     if ($format_type == 'Y') {
         for ($i = $date_start; $i < $date_end; $i++) {
             $arr_data[] = strval($i);
@@ -269,8 +274,7 @@ function yoo_range_format_date($timestamp_start = 0,$timestamp_end = 0,$format_t
         try {
             $start = new \DateTime($date_start);
             $end   = new \DateTime($date_end);
-        }
-        catch (\Exception $exception) {
+        } catch (\Exception $exception) {
             return [];
         }
 
@@ -334,26 +338,26 @@ function yoo_mysql_date_format($format_type = 'Ymd')
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_nearly_date($type = '',$reset = false)
+function yoo_nearly_date($type = '', $reset = false)
 {
     switch ($type) {
         case 'week':
-            if($reset === true){
+            if ($reset === true) {
                 //周一
-                $s_start = date('Y-m-d',time()-(date('N') - 1) * 24 *60 *60);
+                $s_start = date('Y-m-d', time() - (date('N') - 1) * 24 * 60 * 60);
             }
-            else{
+            else {
                 //7天前
                 $s_start = date('Y-m-d', strtotime('-6 day'));
             }
 
             break;
         case 'month':
-            if($reset === true){
+            if ($reset === true) {
                 //月初1号
                 $s_start = date('Y-m') . '-01';
             }
-            else{
+            else {
                 //一个月前
                 $s_start = date('Y-m-d', strtotime('-1 month'));
             }
@@ -361,30 +365,30 @@ function yoo_nearly_date($type = '',$reset = false)
             break;
         case 'half_year':
 
-            if($reset === true){
+            if ($reset === true) {
                 //6个月前月初1号
                 $s_start = date('Y-m', strtotime('-6 month')) . '-01';
             }
-            else{
+            else {
                 //6个月前
                 $s_start = date('Y-m-d', strtotime('-6 month'));
             }
             break;
         default:
-            if($reset === true){
+            if ($reset === true) {
                 //周一
-                $s_start = date('Y-m-d',time()-(date('N') - 1) * 24 *60 *60);
+                $s_start = date('Y-m-d', time() - (date('N') - 1) * 24 * 60 * 60);
             }
-            else{
+            else {
                 //7天前
                 $s_start = date('Y-m-d', strtotime('-6 day'));
             }
     }
 
-    $s_end = date('Y-m-d');
+    $s_end    = date('Y-m-d');
     $arr_date = [
-      'start'     => $s_start,
-      'end'       => $s_end,
+      'start' => $s_start,
+      'end'   => $s_end,
     ];
     //    $result = format_date($arr_date);
     return $arr_date;

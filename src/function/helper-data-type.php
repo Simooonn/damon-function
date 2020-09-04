@@ -13,28 +13,28 @@
 /**
  * 字符串补位
  *
- * @param string $n_number  目标字符串
- * @param int    $n_length  期望长度
- * @param int    $s_pad     填充字符
- * @param string $s_method  填充位置 left左侧 right右侧 both两侧
+ * @param string $n_number 目标字符串
+ * @param int    $n_length 期望长度
+ * @param int    $s_pad    填充字符
+ * @param string $s_method 填充位置 left左侧 right右侧 both两侧
  *
  * @return string
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_string_pad($n_number = '',$n_length = 0,$s_pad = '0',$s_method = 'left'){
-    switch ($s_method)
-    {
+function yoo_string_pad($n_number = '', $n_length = 0, $s_pad = '0', $s_method = 'left')
+{
+    switch ($s_method) {
         case 'left':
-            $s_result =     str_pad($n_number,$n_length,$s_pad,STR_PAD_LEFT);
+            $s_result = str_pad($n_number, $n_length, $s_pad, STR_PAD_LEFT);
             break;
         case 'right':
-            $s_result =     str_pad($n_number,$n_length,$s_pad,STR_PAD_RIGHT);
+            $s_result = str_pad($n_number, $n_length, $s_pad, STR_PAD_RIGHT);
             break;
         case 'both':
-            $s_result =     str_pad($n_number,$n_length,$s_pad,STR_PAD_BOTH);
+            $s_result = str_pad($n_number, $n_length, $s_pad, STR_PAD_BOTH);
             break;
         default:
-            $s_result =     str_pad($n_number,$n_length,$s_pad,STR_PAD_LEFT);
+            $s_result = str_pad($n_number, $n_length, $s_pad, STR_PAD_LEFT);
     }
 
     return $s_result;
@@ -43,41 +43,41 @@ function yoo_string_pad($n_number = '',$n_length = 0,$s_pad = '0',$s_method = 'l
 /**
  * 数字补位
  *
- * @param string $n_number  数字
- * @param int    $n_length  期望长度
- * @param string $s_method  填充位置 left左侧 right右侧 both两侧
+ * @param string $n_number 数字
+ * @param int    $n_length 期望长度
+ * @param string $s_method 填充位置 left左侧 right右侧 both两侧
  *
  * @return string
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_number_pad($n_number = '',$n_length = 0,$s_method = 'left'){
-    if(is_float($n_number)){
+function yoo_number_pad($n_number = '', $n_length = 0, $s_method = 'left')
+{
+    if (is_float($n_number)) {
         $n_length = $n_length + 1;
     }
-    return yoo_string_pad($n_number,$n_length,0,$s_method);
+    return yoo_string_pad($n_number, $n_length, 0, $s_method);
 }
 
 /**
  * 数字格式化
  *
- * @param int  $number      目标数字
- * @param int  $decimals    保留小数位数
- * @param bool $type        格式化类型 true-纯数字格式化（例7897677.00） false-千分位格式化（例7,897,677.00）
+ * @param int  $number   目标数字
+ * @param int  $decimals 保留小数位数
+ * @param bool $type     格式化类型 true-纯数字格式化（例7897677.00） false-千分位格式化（例7,897,677.00）
  *
  * @return string
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_number_format($number = 0, $decimals = 0, $type = true){
-    if($type === true){
-        $result = number_format($number,$decimals,'.','');
+function yoo_number_format($number = 0, $decimals = 0, $type = true)
+{
+    if ($type === true) {
+        $result = number_format($number, $decimals, '.', '');
     }
-    else{
-        $result = number_format($number,$decimals);
+    else {
+        $result = number_format($number, $decimals);
     }
     return $result;
 }
-
-
 
 
 /************************************** 字符串处理 **************************************/
@@ -92,15 +92,15 @@ function yoo_number_format($number = 0, $decimals = 0, $type = true){
  */
 function yoo_string_trim($str = '')
 {
-    if(is_string($str)){
-        if(isset($str) && (!is_null($str)) && (trim($str) !== '')) {
+    if (is_string($str)) {
+        if (isset($str) && (!is_null($str)) && (trim($str) !== '')) {
             $str = trim($str);
         }
-        else{
+        else {
             $str = '';
         }
     }
-    else{
+    else {
         $str = '';
     }
     return $str;
@@ -109,10 +109,10 @@ function yoo_string_trim($str = '')
 /**
  * 隐藏字符串中的部分字符串
  *
- * @param string $s_string  目标字符串
- * @param string $s_hide    隐藏字符 默认*
- * @param int    $n_start   隐藏开始位置
- * @param int    $n_length  隐藏长度
+ * @param string $s_string 目标字符串
+ * @param string $s_hide   隐藏字符 默认*
+ * @param int    $n_start  隐藏开始位置
+ * @param int    $n_length 隐藏长度
  *
  * @return string
  * @author wumengmeng <wu_mengmeng@foxmail.com>
@@ -120,7 +120,7 @@ function yoo_string_trim($str = '')
 function yoo_hide_string($s_string = '', $s_hide = '*', $n_start = 0, $n_length = 1)
 {
     $n_end_start = $n_start + $n_length;
-    $s_hide = yoo_string_pad($s_hide,$n_length,$s_hide);
+    $s_hide      = yoo_string_pad($s_hide, $n_length, $s_hide);
     $res         = substr($s_string, 0, $n_start) . $s_hide . substr($s_string, $n_end_start);
     return $res;
 }
@@ -144,7 +144,7 @@ function yoo_random_articl_says($s_article = '')
 /**
  * 补充链接地址
  *
- * @param string $s_url     文件链接
+ * @param string $s_url 文件链接
  * @param string $s_host
  *
  * @return string
@@ -192,7 +192,7 @@ function yoo_take_img($s_html = '')
 /**
  * 随机生成唯一订单号
  *
- * @param string $s_prefix  前缀
+ * @param string $s_prefix 前缀
  *
  * @return string
  * @author wumengmeng <wu_mengmeng@foxmail.com>
@@ -241,8 +241,6 @@ function yoo_upper_base64_md5($s_uniqid = '', $s_prefix = '')
 }
 
 
-
-
 /************************************** 树形数组 **************************************/
 
 /**
@@ -258,7 +256,7 @@ function yoo_upper_base64_md5($s_uniqid = '', $s_prefix = '')
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_make_tree($arr_list = [],$pk = 'id',$s_pid_key = 'pid',$_children = '_child',$n_pid = 0,$n_level = 0)
+function yoo_make_tree($arr_list = [], $pk = 'id', $s_pid_key = 'pid', $_children = '_child', $n_pid = 0, $n_level = 0)
 {
     //    $tree     = [];
     //    $packData = [];
@@ -279,17 +277,17 @@ function yoo_make_tree($arr_list = [],$pk = 'id',$s_pid_key = 'pid',$_children =
 
     $tree = [];
 
-    foreach($arr_list as $key => $val){
-        if($val[$s_pid_key] == $n_pid){
+    foreach ($arr_list as $key => $val) {
+        if ($val[$s_pid_key] == $n_pid) {
             //获取当前$s_pid_key所有子类
 
             unset($arr_list[$key]);
             $val['level'] = $n_level;
 
-            if(!empty($arr_list)){
-                $child = yoo_make_tree($arr_list,$pk,$s_pid_key,$_children,$val[$pk],$n_level + 1);
+            if (!empty($arr_list)) {
+                $child = yoo_make_tree($arr_list, $pk, $s_pid_key, $_children, $val[$pk], $n_level + 1);
 
-                if(!empty($child)){
+                if (!empty($child)) {
                     $val[$_children] = $child;
                 }
             }
@@ -311,11 +309,12 @@ function yoo_make_tree($arr_list = [],$pk = 'id',$s_pid_key = 'pid',$_children =
  *
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_tree_child_ids($arr_list = [],&$data_ids = [],$n_pid = 0,$pk = 'id',$s_pid_key = 'pid') {
-    foreach($arr_list as $val) {
-        if($val[$s_pid_key]==$n_pid) {
+function yoo_tree_child_ids($arr_list = [], &$data_ids = [], $n_pid = 0, $pk = 'id', $s_pid_key = 'pid')
+{
+    foreach ($arr_list as $val) {
+        if ($val[$s_pid_key] == $n_pid) {
             $data_ids[] = $pid = $val[$pk];
-            yoo_tree_child_ids($arr_list,$data_ids,$pid,$pk,$s_pid_key);
+            yoo_tree_child_ids($arr_list, $data_ids, $pid, $pk, $s_pid_key);
         }
 
     }
@@ -330,28 +329,24 @@ function yoo_tree_child_ids($arr_list = [],&$data_ids = [],$n_pid = 0,$pk = 'id'
  * @return string
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_tree_ico($n_level = 0,$end = false)
+function yoo_tree_ico($n_level = 0, $end = false)
 {
-    $a= ' │';
-    $b = ' ├';
-    $c = ' └';
+    $a      = ' │';
+    $b      = ' ├';
+    $c      = ' └';
     $s_left = '';
-    $s_all = '';
+    $s_all  = '';
 
-    if($n_level > 0)
-    {
-        for($i = 1 ;$i< $n_level;$i++)
-        {
-            $s_left .=$a;
+    if ($n_level > 0) {
+        for ($i = 1; $i < $n_level; $i++) {
+            $s_left .= $a;
         }
 
-        if($end)
-        {
-            $s_all = $s_left.$c;
+        if ($end) {
+            $s_all = $s_left . $c;
         }
-        else
-        {
-            $s_all = $s_left.$b;
+        else {
+            $s_all = $s_left . $b;
 
         }
     }
@@ -403,7 +398,7 @@ function yoo_array_remain($arr_data = [], $arr_remain_key = [])
 {
     $data = [];
     foreach ($arr_remain_key as $value) {
-        if (array_key_exists($value,$arr_data)) {
+        if (array_key_exists($value, $arr_data)) {
             $data[$value] = $arr_data[$value];
         }
     }
@@ -423,13 +418,13 @@ function yoo_array_remain($arr_data = [], $arr_remain_key = [])
 function yoo_array_remain_trim($arr_data = [], $arr_remain_key = [])
 {
     $data = [];
-    if(is_array($arr_data)){
+    if (is_array($arr_data)) {
         foreach ($arr_remain_key as $value) {
-            if (array_key_exists($value,$arr_data)) {
-                if(is_null($arr_data[$value])){
+            if (array_key_exists($value, $arr_data)) {
+                if (is_null($arr_data[$value])) {
                     $data[$value] = '';
                 }
-                else{
+                else {
                     $data[$value] = trim($arr_data[$value]);
                 }
             }
@@ -465,10 +460,8 @@ function yoo_array_remove($arr_data = [], $arr_except_key = [])
  */
 function yoo_array_del_null($arr_data = [])
 {
-    foreach ($arr_data as $key=>$value)
-    {
-        if(is_null($value))
-        {
+    foreach ($arr_data as $key => $value) {
+        if (is_null($value)) {
             unset($arr_data[$key]);
         }
     }
@@ -486,12 +479,11 @@ function yoo_array_del_null($arr_data = [])
 function yoo_array_trim($arr_data = [])
 {
     $data = [];
-    foreach ($arr_data as $key=>$value)
-    {
-        if(is_null($value)){
+    foreach ($arr_data as $key => $value) {
+        if (is_null($value)) {
             $data[$key] = '';
         }
-        else{
+        else {
             $data[$key] = trim($value);
         }
     }
@@ -506,9 +498,9 @@ function yoo_array_trim($arr_data = [])
  * @return array
  * @author wumengmeng <wu_mengmeng@foxmail.com>
  */
-function yoo_array_value_lower($arr_data = []){
-    foreach ($arr_data as &$value)
-    {
+function yoo_array_value_lower($arr_data = [])
+{
+    foreach ($arr_data as &$value) {
         $value = strtolower($value);
     }
     return $arr_data;
@@ -520,23 +512,23 @@ function yoo_array_value_lower($arr_data = []){
 /**
  * 字符串命名风格转换 【下划线转驼峰】
  *
- * @author wumengmeng <wu_mengmeng@foxmail.com>
- *
  * @param string $string     字符串
  * @param bool   $ucfirst    首字母是否大写（驼峰规则）
  * @param string $delimiters 分割字符      _ - ~ 等
  *
  * @return string
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ *
  */
-function yoo_string_underline_to_hump($string,$ucfirst = true,$delimiters = '_')
+function yoo_string_underline_to_hump($string, $ucfirst = true, $delimiters = '_')
 {
-    if(is_string($string)){
+    if (is_string($string)) {
         //字符串里单词首字母大写 然后将分割字符去除
         $string
-          = str_replace($delimiters,'',ucwords($string,$delimiters));
+          = str_replace($delimiters, '', ucwords($string, $delimiters));
 
         //字符串首字母是否大写
-        if(!$ucfirst){
+        if (!$ucfirst) {
             $string = lcfirst($string);
         }
     }
@@ -546,20 +538,20 @@ function yoo_string_underline_to_hump($string,$ucfirst = true,$delimiters = '_')
 /**
  * 数组元素字符串命名风格转换 【下划线转驼峰】
  *
- * @author wumengmeng <wu_mengmeng@foxmail.com>
- *
  * @param array  $array      数组
  * @param bool   $ucfirst    首字母是否大写（驼峰规则）
  * @param string $delimiters 分割字符      _ - ~ 等
  *
  * @return array
+ * @author wumengmeng <wu_mengmeng@foxmail.com>
+ *
  */
-function yoo_array_underline_to_hump($array,$ucfirst = true,$delimiters = '_')
+function yoo_array_underline_to_hump($array, $ucfirst = true, $delimiters = '_')
 {
-    if(is_array($array)){
-        foreach($array as $k => $v){
+    if (is_array($array)) {
+        foreach ($array as $k => $v) {
             $array[$k]
-              = yoo_string_underline_to_hump($v,$ucfirst,$delimiters);
+              = yoo_string_underline_to_hump($v, $ucfirst, $delimiters);
         }
     }
 
@@ -654,7 +646,6 @@ function yoo_array_ids($s_Ids = '', $s_mark = ',', $s_expend = '')
 }
 
 
-
 /**
  * 一维数组每个value值加上特定的字符
  *
@@ -711,7 +702,7 @@ function yoo_array_dikaer($data)
 {
     $result = array_shift($data);
     while ($arr2 = array_shift($data)) {
-        $arr1 = $result;
+        $arr1   = $result;
         $result = [];
         foreach ($arr1 as $v) {
             foreach ($arr2 as $v2) {
@@ -738,10 +729,10 @@ function yoo_array_dikaer($data)
  */
 function yoo_array_cartesian(...$arr_data)
 {
-    $data = func_get_args();
+    $data   = func_get_args();
     $result = array_shift($data);
     while ($arr2 = array_shift($data)) {
-        $arr1 = $result;
+        $arr1   = $result;
         $result = [];
         foreach ($arr1 as $v) {
             foreach ($arr2 as $v2) {
