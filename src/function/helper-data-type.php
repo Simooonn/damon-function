@@ -272,7 +272,7 @@ function yoo_make_tree($arr_list = [],$pk = 'id',$s_pid_key = 'pid',$_children =
     //        }
     //        else{
     //            //找到其父类,重点二
-    //            $packData[$val[$s_pid_key]][$child][] = &$packData[$key];
+    //            $packData[$val[$s_pid_key]][$_children][] = &$packData[$key];
     //        }
     //    }
     //    return $tree;
@@ -423,13 +423,15 @@ function yoo_array_remain($arr_data = [], $arr_remain_key = [])
 function yoo_array_remain_trim($arr_data = [], $arr_remain_key = [])
 {
     $data = [];
-    foreach ($arr_remain_key as $value) {
-        if (array_key_exists($value,$arr_data)) {
-            if(is_null($arr_data[$value])){
-                $data[$value] = '';
-            }
-            else{
-                $data[$value] = trim($arr_data[$value]);
+    if(is_array($arr_data)){
+        foreach ($arr_remain_key as $value) {
+            if (array_key_exists($value,$arr_data)) {
+                if(is_null($arr_data[$value])){
+                    $data[$value] = '';
+                }
+                else{
+                    $data[$value] = trim($arr_data[$value]);
+                }
             }
         }
     }

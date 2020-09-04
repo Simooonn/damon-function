@@ -50,7 +50,7 @@
 //        $arr_data['brand_model']   = $arr_data['model'];
 //        $arr_data['issue_date']    = str_replace('-', '', $arr_data['issue_date']);
 //        $arr_data['register_date'] = str_replace('-', '', $arr_data['register_date']);
-//        return hello_success('成功', $arr_data);
+//        return yoo_hello_success('成功', $arr_data);
 //    }
 //    else {
 //        if (empty($res)) {
@@ -303,7 +303,7 @@
 //            sleep(2);
 //        }
 //
-//        return hello_success('添加成功');
+//        return yoo_hello_success('添加成功');
 //
 //    } catch (\Exception $exception) {
 //        return hello_error('失败', [], $exception->getMessage());
@@ -699,7 +699,7 @@
 //          'register_date' => $data['注册日期']['words'],
 //          'issue_date'    => $data['发证日期']['words'],
 //        ];
-//        return hello_success('成功', $arr_data);
+//        return yoo_hello_success('成功', $arr_data);
 //    }
 //    else {
 //        return hello_error($res['error_msg'], [], $res['error_code']);
@@ -771,5 +771,5 @@
 //        //          return hello_error('aes 解密失败',[],'-41003');
 //    }
 //    $data = $result;
-//    return hello_success('成功', [], 0);
+//    return yoo_hello_success('成功', [], 0);
 //}
