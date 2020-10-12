@@ -371,7 +371,7 @@ function yoo_tree_list($arr_tree)
             if (!empty($arr_child)) {
                 $value['_child'] = 1;
                 $arr_data[]      = $value;
-                $a               = tree_to_one_tree($arr_child);
+                $a               = yoo_tree_list($arr_child);
                 $arr_data        = array_merge($arr_data, $a);
             }
             else {
